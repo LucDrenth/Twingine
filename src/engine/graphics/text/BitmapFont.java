@@ -28,7 +28,7 @@ public class BitmapFont
     {
         Font font = createFontFromTTF( fontName, fontSize );
         RenderedImage renderedImage = fontToBitmap( font, fontSize );
-        saveAsPng( renderedImage, fontName );
+        saveAsPng( renderedImage, fontName, fontSize );
     }
 
     private static Font createFontFromTTF( String name, float size )
@@ -150,9 +150,10 @@ public class BitmapFont
         }
     }
 
-    private static void saveAsPng( RenderedImage renderedImage, String fontName )
+    private static void saveAsPng( RenderedImage renderedImage, String fontName, float fontSize )
     {
-        File file = new File( bitmapsDirectoryPath + "/" + fontName + ".png" );
+        String fileName = bitmapsDirectoryPath + "/" + fontName + "_" + fontSize + ".png";
+        File file = new File( fileName );
         try
         {
             ImageIO.write( renderedImage, "png", file );
