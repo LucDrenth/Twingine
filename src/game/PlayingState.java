@@ -7,6 +7,7 @@ import engine.graphics.image.AnimationMode;
 import engine.graphics.image.Image;
 import engine.graphics.image.Sprite;
 import engine.graphics.shapes.Rectangle;
+import engine.graphics.text.BitmapFont;
 import engine.input.Input;
 
 import static java.awt.event.KeyEvent.*;
@@ -40,6 +41,8 @@ public class PlayingState implements GameStateManager
         sprite.setAnimationMode( AnimationMode.LOOPING );
         sprite.setOffsets( 0, 0 );
         sprite.countXTilesPerRowWithEmptySpaces();
+
+        BitmapFont.createBitmapFontFile( "Roboto-Regular", 14 );
     }
 
 
