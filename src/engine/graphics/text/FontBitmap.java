@@ -26,6 +26,11 @@ public class FontBitmap
         return convertRenderedImage( renderedImage );
     }
 
+    /*
+     * - fontName should be the name of an existing .ttf file in fonts/bitmaps/ttf and should not include .ttf
+     * - outputFileName should be the name of the file of the bitmap that wil be created in fonts/bitmaps and should not
+     *   include .png
+     */
     public static void createAndSaveAsPng( String fontName, float fontSize, String outputFileName )
     {
         Font font = createFontFromTTF( fontName, fontSize );
