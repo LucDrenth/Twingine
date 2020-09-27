@@ -3,26 +3,17 @@ package engine.graphics.text;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Font;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.*;
 
-public class BitmapFont
+public class FontBitmap
 {
     private static final String ttfDirectoryPath = "res/fonts/ttf";
     private static final String bitmapsDirectoryPath = "res/fonts/bitmaps";
-
-    public BitmapFont( String name, float size )
-    {
-        loadBitmapFont();
-    }
-
-    private void loadBitmapFont()
-    {
-        // TODO load the bitmap font
-    }
 
     public static void createBitmapFontFile( String fontName, float fontSize )
     {
@@ -162,5 +153,10 @@ public class BitmapFont
         {
             e.printStackTrace();
         }
+    }
+
+    public static String getBitmapsDirectoryPath()
+    {
+        return bitmapsDirectoryPath;
     }
 }
