@@ -17,13 +17,20 @@ public class FontBitmap
 {
     private static final String ttfDirectoryPath = "res/fonts/ttf";
     private static final String bitmapsDirectoryPath = "res/fonts/bitmaps";
+    private static final int characters = 256;
 
     public static BufferedImage create( String fontName, float fontSize )
     {
         Font font = createFontFromTTF( fontName, fontSize );
         RenderedImage renderedImage = fontToBitmap( font, fontSize );
-//        saveAsPng( renderedImage, fontName, fontSize );
         return convertRenderedImage( renderedImage );
+    }
+
+    public static void createAndSaveAsPng( String fontName, float fontSize, boolean addFontSizeToFileName )
+    {
+        Font font = createFontFromTTF( fontName, fontSize );
+        RenderedImage renderedImage = fontToBitmap( font, fontSize );
+        saveAsPng( renderedImage, fontName, fontSize, addFontSizeToFileName );
     }
 
     private static Font createFontFromTTF( String name, float size )
@@ -77,7 +84,7 @@ public class FontBitmap
     {
         int width = 0;
 
-        for( int c = 0; c < 256; c++ )
+        for( int c = 0; c < characters; c++ )
         {
             width += fontMetrics.charWidth( (char) c ) + 2;
         }
@@ -87,8 +94,8 @@ public class FontBitmap
 
     private static int calculateBitmapHeight( Font font, FontRenderContext fontRenderContext )
     {
-        StringBuilder buffer = new StringBuilder( 256 );
-        for( int c = 0; c < 256; c++ )
+        StringBuilder buffer = new StringBuilder( characters );
+        for( int c = 0; c < characters; c++ )
         {
             buffer.append( (char) c );
         }
@@ -100,9 +107,9 @@ public class FontBitmap
 
     private static float calculateFontSize( float fontSize, Font font, FontRenderContext fontRenderContext )
     {
-        int[] sizes = new int[ 256 ];
+        int[] sizes = new int[ characters ];
 
-        for( int c = 0; c < 256; c++ )
+        for( int c = 0; c < characters; c++ )
         {
             GlyphVector glyphVector = font.createGlyphVector( fontRenderContext, String.valueOf( (char) c ) );
             sizes[ c ] = glyphVector.getPixelBounds( null, 0, 0 ).height;
@@ -123,7 +130,7 @@ public class FontBitmap
         int offsetX = 0;
         int offsetY;
 
-        for( int c = 0; c < 256; c++ )
+        for( int c = 0; c < characters; c++ )
         {
             // draw a red dot to mark the beginning of the character
             offsetY = 0;
@@ -145,9 +152,14 @@ public class FontBitmap
         }
     }
 
-    private static void saveAsPng( RenderedImage renderedImage, String fontName, float fontSize )
+    private static void saveAsPng( RenderedImage renderedImage, String fontName, float fontSize, boolean addFontSizeToFileName )
     {
-        String fileName = bitmapsDirectoryPath + "/" + fontName + "_" + fontSize + ".png";
+        String fileName;
+        if( addFontSizeToFileName )
+            fileName = bitmapsDirectoryPath + "/" + fontName + "_" + (int)fontSize + ".png";
+        else
+            fileName = bitmapsDirectoryPath + "/" + fontName + ".png";
+
         File file = new File( fileName );
         try
         {
@@ -181,5 +193,10 @@ public class FontBitmap
         BufferedImage result = new BufferedImage( cm, raster, isAlphaPremultiplied, properties );
         renderedImage.copyData( raster );
         return result;
+    }
+
+    public static int getCharacters()
+    {
+        return characters;
     }
 }

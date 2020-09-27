@@ -18,6 +18,10 @@ public class Text
     private int spaceBetweenLetters;
     private int spaceBetweenWords;
 
+    private boolean isParagraph;
+    private int paragraphWidth;
+    private int spaceBetweenLines;
+
     public Text( String string, Font font, int color )
     {
         setString( string );
@@ -32,17 +36,26 @@ public class Text
     {
         int characterOffsetX = offsetX;
         int characterOffsetY = offsetY;
-        for( String word : words )
+
+        for( int wordIndex = 0; wordIndex < words.length; wordIndex++ )
         {
-            for( int i = 0; i < word.length(); i++ )
+            for( int characterIndex = 0; characterIndex < words[ wordIndex ].length(); characterIndex++ )
             {
-                int unicode = word.codePointAt( i );
+                int unicode = words[ wordIndex ].codePointAt( characterIndex );
 
                 drawLetter( renderer, unicode, characterOffsetX, characterOffsetY );
                 characterOffsetX += font.getCharacterWidths()[ unicode ] + spaceBetweenLetters;
             }
 
             characterOffsetX += spaceBetweenWords;
+
+            if( isParagraph &&
+                wordIndex < words.length - 1 &&
+                characterOffsetX + getWordWidth( words[ wordIndex + 1 ] ) > paragraphWidth )
+            {
+                characterOffsetX = 0;
+                characterOffsetY += font.getHeight() + spaceBetweenLines;
+            }
         }
     }
 
@@ -76,12 +89,16 @@ public class Text
         return wordWidth - spaceBetweenLetters;
     }
 
+    public String getString()
+    {
+        return string;
+    }
+
     public void setString( String string )
     {
         this.string = string;
         words = StringUtils.getWords( string );
     }
-
 
     public void setOffsets( int offsetX, int offsetY )
     {
@@ -107,5 +124,25 @@ public class Text
     public void setSpaceBetweenWords( int spaceBetweenWords )
     {
         this.spaceBetweenWords = spaceBetweenWords;
+    }
+
+    public void setFont( Font font )
+    {
+        this.font = font;
+    }
+
+    public void setParagraph( boolean paragraph )
+    {
+        isParagraph = paragraph;
+    }
+
+    public void setParagraphWidth( int paragraphWidth )
+    {
+        this.paragraphWidth = paragraphWidth;
+    }
+
+    public void setSpaceBetweenLines( int spaceBetweenLines )
+    {
+        this.spaceBetweenLines = spaceBetweenLines;
     }
 }

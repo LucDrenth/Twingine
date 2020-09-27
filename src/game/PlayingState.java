@@ -23,10 +23,12 @@ public class PlayingState implements GameStateManager
         input = engine.getInput();
         renderer = engine.getRenderer();
 
-        roboto = new Font( "Roboto-Regular", 12f );
+        roboto = new Font( "Roboto-Regular_15.png", 14f );
         text = new Text( "Hallo, ik ben Luc Drenth. Ik ben 22 jaar oud en ik ben software developer.", roboto, 0xff_f3c802 );
         text.setOffsets( 0, 0 );
-        text.setString( "Welcome to Twingine" );
+        text.setString( "Welcome to Twingine. This is my software renderer which I am going to use to make a game. But first, I am going to make a photo editing program. I already programmed in a lot of, if not all, filters and effects for images (or actually for pixel[]'s)." );
+        text.setParagraph( true );
+        text.setParagraphWidth( 300 );
     }
 
     @Override

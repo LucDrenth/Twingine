@@ -1,3 +1,12 @@
+/*
+ * How to use:
+ *
+ * When creating a font, String name in the constructor should be on of:
+ * - "Arial" when you want to use a font from an existing .ttf file in fonts/ttf
+ * - "Arial.png" when you want to use a custom bitmap from a .png file from fonts/bitmaps. To create a bitmap as .png
+ *   from a ttf file, call createAndSaveAsPng().
+ */
+
 package engine.graphics.text;
 
 import engine.graphics.image.Image;
@@ -12,12 +21,24 @@ public class Font
 
     public Font( String name, float fontSize )
     {
-        bitmap = new Image( FontBitmap.create( name, fontSize ) );
-        characterOffsets = new int[ 256 ];
-        characterWidths = new int[ 256 ];
+        if( isPng( name ) )
+            bitmap = new Image( "/fonts/bitmaps/" + name );
+        else
+            bitmap = new Image( FontBitmap.create( name, fontSize ) );
 
+        calculateCharacterData();
+    }
 
-        // calculate character widths and offsets
+    private boolean isPng( String name )
+    {
+        return name.length() > 4 && name.substring( name.length() - 4 ).equals( ".png" );
+    }
+
+    private void calculateCharacterData()
+    {
+        characterOffsets = new int[ FontBitmap.getCharacters() ];
+        characterWidths = new int[ FontBitmap.getCharacters() ];
+
         int currentCharacter = 0;
 
         for( int i = 0; i < bitmap.getWidth(); i++ )
