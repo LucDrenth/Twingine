@@ -13,6 +13,9 @@ public class PlayingState implements GameStateManager
     private Input input;
     private Renderer renderer;
 
+    private Font roboto;
+    private Text text;
+
     public PlayingState( Engine engine )
     {
         this.engine = engine;
@@ -20,8 +23,10 @@ public class PlayingState implements GameStateManager
         input = engine.getInput();
         renderer = engine.getRenderer();
 
-        Font roboto = new Font( "Roboto-Regular", 12f );
-        Text text = new Text( "Welcome to my application!", roboto, 0xff_f3c802 );
+        roboto = new Font( "Roboto-Regular", 12f );
+        text = new Text( "Hallo, ik ben Luc Drenth. Ik ben 22 jaar oud en ik ben software developer.", roboto, 0xff_f3c802 );
+        text.setOffsets( 0, 0 );
+        text.setString( "Welcome to Twingine" );
     }
 
     @Override
@@ -33,7 +38,7 @@ public class PlayingState implements GameStateManager
     @Override
     public void draw()
     {
-
+        text.draw( renderer );
     }
 
 }

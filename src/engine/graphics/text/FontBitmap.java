@@ -22,6 +22,7 @@ public class FontBitmap
     {
         Font font = createFontFromTTF( fontName, fontSize );
         RenderedImage renderedImage = fontToBitmap( font, fontSize );
+//        saveAsPng( renderedImage, fontName, fontSize );
         return convertRenderedImage( renderedImage );
     }
 

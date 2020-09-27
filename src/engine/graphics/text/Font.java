@@ -16,6 +16,8 @@ public class Font
         characterOffsets = new int[ 256 ];
         characterWidths = new int[ 256 ];
 
+
+        // calculate character widths and offsets
         int currentCharacter = 0;
 
         for( int i = 0; i < bitmap.getWidth(); i++ )
@@ -27,7 +29,7 @@ public class Font
 
             if( bitmap.getPixels()[ i ] == Color.BLUE.hashCode() )
             {
-                characterWidths[ currentCharacter ] = i - characterOffsets[ currentCharacter ];
+                characterWidths[ currentCharacter ] = i - characterOffsets[ currentCharacter ] - 1;
                 currentCharacter++;
             }
         }
@@ -47,5 +49,9 @@ public class Font
     {
         return characterWidths;
     }
-}
 
+    public int getHeight()
+    {
+        return bitmap.getHeight() - 1;
+    }
+}
