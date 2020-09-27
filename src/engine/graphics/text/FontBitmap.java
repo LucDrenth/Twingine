@@ -26,11 +26,11 @@ public class FontBitmap
         return convertRenderedImage( renderedImage );
     }
 
-    public static void createAndSaveAsPng( String fontName, float fontSize, boolean addFontSizeToFileName )
+    public static void createAndSaveAsPng( String fontName, float fontSize, String outputFileName )
     {
         Font font = createFontFromTTF( fontName, fontSize );
         RenderedImage renderedImage = fontToBitmap( font, fontSize );
-        saveAsPng( renderedImage, fontName, fontSize, addFontSizeToFileName );
+        saveAsPng( renderedImage, fontName, fontSize, outputFileName );
     }
 
     private static Font createFontFromTTF( String name, float size )
@@ -152,13 +152,9 @@ public class FontBitmap
         }
     }
 
-    private static void saveAsPng( RenderedImage renderedImage, String fontName, float fontSize, boolean addFontSizeToFileName )
+    private static void saveAsPng( RenderedImage renderedImage, String fontName, float fontSize, String outputFileName )
     {
-        String fileName;
-        if( addFontSizeToFileName )
-            fileName = bitmapsDirectoryPath + "/" + fontName + "_" + (int)fontSize + ".png";
-        else
-            fileName = bitmapsDirectoryPath + "/" + fontName + ".png";
+        String fileName = bitmapsDirectoryPath + "/" + outputFileName + ".png";
 
         File file = new File( fileName );
         try

@@ -1,7 +1,7 @@
 /*
  * How to use:
  *
- * When creating a font, String name in the constructor should be on of:
+ * When creating a font, String name in the constructor should be one of:
  * - "Arial" when you want to use a font from an existing .ttf file in fonts/ttf
  * - "Arial.png" when you want to use a custom bitmap from a .png file from fonts/bitmaps. To create a bitmap as .png
  *   from a ttf file, call createAndSaveAsPng().
