@@ -3,6 +3,8 @@ package game;
 import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
+import engine.graphics.text.Font;
+import engine.graphics.text.Text;
 import engine.input.Input;
 
 public class PlayingState implements GameStateManager
@@ -17,8 +19,10 @@ public class PlayingState implements GameStateManager
 
         input = engine.getInput();
         renderer = engine.getRenderer();
-    }
 
+        Font roboto = new Font( "Roboto-Regular", 12f );
+        Text text = new Text( "Welcome to my application!", roboto, 0xff_f3c802 );
+    }
 
     @Override
     public void update()

@@ -2,24 +2,27 @@ package engine.graphics.text;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.Font;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
+import java.awt.image.WritableRaster;
 import java.io.*;
+import java.util.Hashtable;
 
 public class FontBitmap
 {
     private static final String ttfDirectoryPath = "res/fonts/ttf";
     private static final String bitmapsDirectoryPath = "res/fonts/bitmaps";
 
-    public static void createBitmapFontFile( String fontName, float fontSize )
+    public static BufferedImage create( String fontName, float fontSize )
     {
         Font font = createFontFromTTF( fontName, fontSize );
         RenderedImage renderedImage = fontToBitmap( font, fontSize );
-        saveAsPng( renderedImage, fontName, fontSize );
+        return convertRenderedImage( renderedImage );
     }
 
     private static Font createFontFromTTF( String name, float size )
@@ -64,7 +67,7 @@ public class FontBitmap
         graphics.setFont( font );
 
         // draw the characters in the image
-        drawCharactersToImage( graphics, fontMetrics, (int)fontSize );
+        drawCharactersToImage( graphics, fontMetrics, (int) fontSize );
 
         return sprite;
     }
@@ -100,7 +103,7 @@ public class FontBitmap
 
         for( int c = 0; c < 256; c++ )
         {
-            GlyphVector glyphVector = font.createGlyphVector( fontRenderContext, String.valueOf( (char)c ) );
+            GlyphVector glyphVector = font.createGlyphVector( fontRenderContext, String.valueOf( (char) c ) );
             sizes[ c ] = glyphVector.getPixelBounds( null, 0, 0 ).height;
         }
 
@@ -155,8 +158,27 @@ public class FontBitmap
         }
     }
 
-    public static String getBitmapsDirectoryPath()
+    private static BufferedImage convertRenderedImage( RenderedImage renderedImage )
     {
-        return bitmapsDirectoryPath;
+        if( renderedImage instanceof BufferedImage )
+            return (BufferedImage) renderedImage;
+
+        ColorModel cm = renderedImage.getColorModel();
+        int width = renderedImage.getWidth();
+        int height = renderedImage.getHeight();
+        WritableRaster raster = cm.createCompatibleWritableRaster( width, height );
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        Hashtable<String, Object> properties = new Hashtable<>();
+        String[] keys = renderedImage.getPropertyNames();
+
+        if( keys != null )
+        {
+            for( String key : keys )
+                properties.put( key, renderedImage.getProperty( key ) );
+        }
+
+        BufferedImage result = new BufferedImage( cm, raster, isAlphaPremultiplied, properties );
+        renderedImage.copyData( raster );
+        return result;
     }
 }

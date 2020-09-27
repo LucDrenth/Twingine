@@ -6,27 +6,26 @@ import java.awt.*;
 
 public class Font
 {
-    private Image fontImage;
+    private Image bitmap;
     private int[] characterOffsets;
     private int[] characterWidths;
 
-    private Font( String name )
+    public Font( String name, float fontSize )
     {
-        String path = FontBitmap.getBitmapsDirectoryPath() + " / " + name + ".png";
-        fontImage = new Image( path );
+        bitmap = new Image( FontBitmap.create( name, fontSize ) );
         characterOffsets = new int[ 256 ];
         characterWidths = new int[ 256 ];
 
         int currentCharacter = 0;
 
-        for( int i = 0; i < fontImage.getWidth(); i++ )
+        for( int i = 0; i < bitmap.getWidth(); i++ )
         {
-            if( fontImage.getPixels()[ i ] == Color.RED.hashCode() )
+            if( bitmap.getPixels()[ i ] == Color.RED.hashCode() )
             {
                 characterOffsets[ currentCharacter ] = i;
             }
 
-            if( fontImage.getPixels()[ i ] == Color.BLUE.hashCode() )
+            if( bitmap.getPixels()[ i ] == Color.BLUE.hashCode() )
             {
                 characterWidths[ currentCharacter ] = i - characterOffsets[ currentCharacter ];
                 currentCharacter++;
@@ -34,9 +33,9 @@ public class Font
         }
     }
 
-    public Image getFontImage()
+    public Image getBitmap()
     {
-        return fontImage;
+        return bitmap;
     }
 
     public int[] getCharacterOffsets()

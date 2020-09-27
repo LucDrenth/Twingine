@@ -9,7 +9,10 @@ import java.io.IOException;
 
 public class Image
 {
+    // one of path and bufferedImage should be null
     private String path;
+    private BufferedImage bufferedImage;
+
     private int[] pixels;
 
     private int alphaPercentage;
@@ -23,29 +26,47 @@ public class Image
     public Image( String path )
     {
         this.path = path;
-
         loadImageFromPath( path );
+        initVariables();
+    }
 
-        offsetX = 0;
-        offsetY = 0;
-        alphaPercentage = 100;
-        blurInbound = false;
+    public Image( BufferedImage bufferedImage )
+    {
+        this.bufferedImage = bufferedImage;
+        loadImageFromBufferedImage( bufferedImage );
+        initVariables();
     }
 
     private void loadImageFromPath( String path )
     {
         try
         {
-            BufferedImage image = ImageIO.read( Image.class.getResourceAsStream( path ) );
-            width = image.getWidth();
-            height = image.getHeight();
-            pixels = image.getRGB( 0, 0, width, height, null, 0, width );
-            image.flush();
+            BufferedImage bufferedImage = ImageIO.read( Image.class.getResourceAsStream( path ) );
+            width = bufferedImage.getWidth();
+            height = bufferedImage.getHeight();
+            pixels = bufferedImage.getRGB( 0, 0, width, height, null, 0, width );
+            bufferedImage.flush();
         }
         catch( IOException e )
         {
             e.printStackTrace();
         }
+    }
+
+    private void loadImageFromBufferedImage( BufferedImage bufferedImage )
+    {
+        width = bufferedImage.getWidth();
+        height = bufferedImage.getHeight();
+        pixels = bufferedImage.getRGB( 0, 0, width, height, null, 0, width );
+        bufferedImage.flush();
+    }
+
+    private void initVariables()
+    {
+        offsetX = 0;
+        offsetY = 0;
+        alphaPercentage = 100;
+        blurInbound = false;
     }
 
     public void draw( Renderer renderer )
@@ -236,7 +257,11 @@ public class Image
     // resets the image by loading it again
     public void reset()
     {
-        loadImageFromPath( path );
+        if( bufferedImage == null )
+            loadImageFromPath( path );
+        else
+            loadImageFromBufferedImage( bufferedImage );
+
         alphaPercentage = 100;
     }
 
