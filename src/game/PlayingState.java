@@ -3,6 +3,7 @@ package game;
 import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
+import engine.graphics.color.ColorPalette;
 import engine.graphics.text.Font;
 import engine.graphics.text.Text;
 import engine.input.Input;
@@ -25,7 +26,7 @@ public class PlayingState implements GameStateManager
 
         roboto = new Font( "Roboto-Regular_15.png", 14f );
         Font robotoTTF = new Font( "Roboto-Regular.png", 18f );
-        text = new Text( "Hallo, ik ben Luc Drenth. Ik ben 22 jaar oud en ik ben software developer.", robotoTTF, 0xff_f3c802 );
+        text = new Text( "Hallo, ik ben Luc Drenth. Ik ben 22 jaar oud en ik ben software developer.", robotoTTF, ColorPalette.getWhite() );
         text.setOffsets( 250, 250 );
         text.setString( "Welcome to Twingine. This is my software renderer which I am going to use to make a game. But first, I am going to make a photo editing program. I already programmed in a lot of, if not all, filters and effects for images (or actually for pixel[]'s)." );
         text.setParagraph( true );
@@ -35,7 +36,7 @@ public class PlayingState implements GameStateManager
     @Override
     public void update()
     {
-
+        text.setOffsets( input.getMouseX(), input.getMouseY() );
     }
 
     @Override

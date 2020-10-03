@@ -51,9 +51,9 @@ public class Text
 
             if( isParagraph &&
                 wordIndex < words.length - 1 &&
-                characterOffsetX + getWordWidth( words[ wordIndex + 1 ] ) > paragraphWidth )
+                characterOffsetX + getWordWidth( words[ wordIndex + 1 ] ) > paragraphWidth + offsetX )
             {
-                characterOffsetX = 0;
+                characterOffsetX = offsetX;
                 characterOffsetY += font.getHeight() + spaceBetweenLines;
             }
         }
