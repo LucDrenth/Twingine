@@ -27,7 +27,7 @@ public class FontBitmap
     }
 
     /*
-     * - fontName should be the name of an existing .ttf file in fonts/bitmaps/ttf and should not include .ttf
+     * - fontName should be the name of an existing .ttf file in fonts/bitmaps/ttf and should include .ttf
      * - outputFileName should be the name of the file of the bitmap that wil be created in fonts/bitmaps and should not
      *   include .png
      */
@@ -40,7 +40,7 @@ public class FontBitmap
 
     private static Font createFontFromTTF( String name, float size )
     {
-        String path = ttfDirectoryPath + "/" + name + ".ttf";
+        String path = ttfDirectoryPath + "/" + name;
         try
         {
             InputStream inputStream = new BufferedInputStream( new FileInputStream( path ) );

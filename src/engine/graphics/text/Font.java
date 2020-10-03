@@ -23,7 +23,7 @@ public class Font
     {
         if( isPng( name ) )
             bitmap = new Image( "/fonts/bitmaps/" + name );
-        else
+        else if( isTtf( name ) )
             bitmap = new Image( FontBitmap.create( name, fontSize ) );
 
         calculateCharacterData();
@@ -32,6 +32,11 @@ public class Font
     private boolean isPng( String name )
     {
         return name.length() > 4 && name.substring( name.length() - 4 ).equals( ".png" );
+    }
+
+    private boolean isTtf( String name )
+    {
+        return name.endsWith( ".ttf" );
     }
 
     private void calculateCharacterData()
