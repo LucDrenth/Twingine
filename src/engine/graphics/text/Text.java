@@ -22,14 +22,21 @@ public class Text
     private int paragraphWidth;
     private int spaceBetweenLines;
 
+    private boolean showLetterForLetter;
+    private int showingSpeed;
+    private int lettersToShow;
+
     public Text( String string, Font font, int color )
     {
         setString( string );
         this.font = font;
         this.color = color;
 
+        showLetterForLetter = true;
         spaceBetweenLetters = 0;
         spaceBetweenWords = font.getCharacterWidths()[ ' ' ];
+
+        showingSpeed = 1;
     }
 
     public void draw( Renderer renderer )
@@ -37,14 +44,30 @@ public class Text
         int characterOffsetX = offsetX;
         int characterOffsetY = offsetY;
 
+        int lettersShown = 0; // keeps track of how many letters are already shown
+
         for( int wordIndex = 0; wordIndex < words.length; wordIndex++ )
         {
+
             for( int characterIndex = 0; characterIndex < words[ wordIndex ].length(); characterIndex++ )
             {
                 int unicode = words[ wordIndex ].codePointAt( characterIndex );
 
-                drawLetter( renderer, unicode, characterOffsetX, characterOffsetY );
-                characterOffsetX += font.getCharacterWidths()[ unicode ] + spaceBetweenLetters;
+                if( showLetterForLetter )
+                {
+                    if( lettersShown < lettersToShow )
+                    {
+                        drawLetter( renderer, unicode, characterOffsetX, characterOffsetY );
+                        characterOffsetX += font.getCharacterWidths()[ unicode ] + spaceBetweenLetters;
+                        lettersShown++;
+                    }
+                }
+                else
+                {
+                    drawLetter( renderer, unicode, characterOffsetX, characterOffsetY );
+                    characterOffsetX += font.getCharacterWidths()[ unicode ] + spaceBetweenLetters;
+
+                }
             }
 
             characterOffsetX += spaceBetweenWords;
@@ -57,6 +80,8 @@ public class Text
                 characterOffsetY += font.getHeight() + spaceBetweenLines;
             }
         }
+
+        updateLetterShowing();
     }
 
     private void drawLetter( Renderer renderer, int unicode, int offsetX, int offsetY )
@@ -87,6 +112,19 @@ public class Text
 
         // return with "- space between letters" because the last letter does not have space behind it
         return wordWidth - spaceBetweenLetters;
+    }
+
+    private void updateLetterShowing()
+    {
+        if( showLetterForLetter )
+        {
+            if( lettersToShow < string.length() )
+            {
+                lettersToShow += showingSpeed;
+                if( lettersToShow > string.length() )
+                    lettersToShow = string.length();
+            }
+        }
     }
 
     public String getString()
@@ -144,5 +182,35 @@ public class Text
     public void setSpaceBetweenLines( int spaceBetweenLines )
     {
         this.spaceBetweenLines = spaceBetweenLines;
+    }
+
+    public boolean isShowLetterForLetter()
+    {
+        return showLetterForLetter;
+    }
+
+    public void setShowLetterForLetter( boolean showLetterForLetter )
+    {
+        this.showLetterForLetter = showLetterForLetter;
+    }
+
+    public int getShowingSpeed()
+    {
+        return showingSpeed;
+    }
+
+    public void setShowingSpeed( int showingSpeed )
+    {
+        this.showingSpeed = showingSpeed;
+    }
+
+    public int getLettersToShow()
+    {
+        return lettersToShow;
+    }
+
+    public void setLettersToShow( int lettersToShow )
+    {
+        this.lettersToShow = lettersToShow;
     }
 }

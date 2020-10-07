@@ -8,6 +8,8 @@ import engine.graphics.text.Font;
 import engine.graphics.text.Text;
 import engine.input.Input;
 
+import static java.awt.event.KeyEvent.VK_SPACE;
+
 public class PlayingState implements GameStateManager
 {
     private Engine engine;
@@ -31,12 +33,18 @@ public class PlayingState implements GameStateManager
         text.setString( "Welcome to Twingine. This is my software renderer which I am going to use to make a game. But first, I am going to make a photo editing program. I already programmed in a lot of, if not all, filters and effects for images (or actually for pixel[]'s)." );
         text.setParagraph( true );
         text.setParagraphWidth( 300 );
+        text.setShowingSpeed( 3 );
     }
 
     @Override
     public void update()
     {
         text.setOffsets( input.getMouseX(), input.getMouseY() );
+
+        if( input.isKeyDown( VK_SPACE ) )
+        {
+            text.setLettersToShow( 0 );
+        }
     }
 
     @Override
