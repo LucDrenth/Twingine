@@ -42,6 +42,24 @@ public class Text
         alphaPercentage = 100;
     }
 
+    public void update()
+    {
+        updateLetterShowing();
+    }
+
+    private void updateLetterShowing()
+    {
+        if( showLetterForLetter )
+        {
+            if( lettersToShow < string.length() )
+            {
+                lettersToShow += showingSpeed;
+                if( lettersToShow > string.length() )
+                    lettersToShow = string.length();
+            }
+        }
+    }
+
     public void draw( Renderer renderer )
     {
         int characterOffsetX = offsetX;
@@ -68,25 +86,19 @@ public class Text
                 {
                     drawLetter( renderer, unicode, characterOffsetX, characterOffsetY );
                     characterOffsetX += font.getCharacterWidths()[ unicode ] + spaceBetweenLetters;
-
                 }
             }
 
             characterOffsetX += spaceBetweenWords;
 
             if( isParagraph &&
-                wordIndex < words.length - 1 &&
-                characterOffsetX + getWordWidth( words[ wordIndex + 1 ] ) > paragraphWidth + offsetX )
+                wordIndex < words.length - 1 && // is not the last word
+                characterOffsetX + getWordWidth( words[ wordIndex + 1 ] ) > paragraphWidth + offsetX ) // adding the next word exceeds the paragraph width
             {
                 characterOffsetX = offsetX;
                 characterOffsetY += font.getHeight() + spaceBetweenLines;
             }
         }
-    }
-
-    public void update()
-    {
-        updateLetterShowing();
     }
 
     private void drawLetter( Renderer renderer, int unicode, int offsetX, int offsetY )
@@ -118,19 +130,6 @@ public class Text
 
         // return with "- space between letters" because the last letter does not have space behind it
         return wordWidth - spaceBetweenLetters;
-    }
-
-    private void updateLetterShowing()
-    {
-        if( showLetterForLetter )
-        {
-            if( lettersToShow < string.length() )
-            {
-                lettersToShow += showingSpeed;
-                if( lettersToShow > string.length() )
-                    lettersToShow = string.length();
-            }
-        }
     }
 
     public String getString()
