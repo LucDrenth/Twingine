@@ -48,6 +48,8 @@ public class PlayingState implements GameStateManager
         }
 
         text.setAlphaPercentage( (int)( (float)input.getMouseX() / (float)engine.getWindow().getWidth() * 100 ) );
+
+        text.update();
     }
 
     @Override

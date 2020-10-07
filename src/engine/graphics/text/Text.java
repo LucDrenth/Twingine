@@ -82,7 +82,10 @@ public class Text
                 characterOffsetY += font.getHeight() + spaceBetweenLines;
             }
         }
+    }
 
+    public void update()
+    {
         updateLetterShowing();
     }
 
