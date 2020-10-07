@@ -14,6 +14,7 @@ public class Text
     private int offsetY;
 
     private int color;
+    private int alphaPercentage;
 
     private int spaceBetweenLetters;
     private int spaceBetweenWords;
@@ -31,12 +32,14 @@ public class Text
         setString( string );
         this.font = font;
         this.color = color;
+        alphaPercentage = 100;
 
         showLetterForLetter = true;
         spaceBetweenLetters = 0;
         spaceBetweenWords = font.getCharacterWidths()[ ' ' ];
 
         showingSpeed = 1;
+        alphaPercentage = 100;
     }
 
     public void draw( Renderer renderer )
@@ -48,7 +51,6 @@ public class Text
 
         for( int wordIndex = 0; wordIndex < words.length; wordIndex++ )
         {
-
             for( int characterIndex = 0; characterIndex < words[ wordIndex ].length(); characterIndex++ )
             {
                 int unicode = words[ wordIndex ].codePointAt( characterIndex );
@@ -93,8 +95,9 @@ public class Text
                 int alpha = ( font.getBitmap().getPixel( x + font.getCharacterOffsets()[ unicode ], y ) >> 24 ) & 0xff;
                 if( alpha > 0 )
                 {
-                    int alphaPercentage = (int)( (float)alpha / 255 * 100 );
-                    renderer.setPixel( offsetX + x, offsetY + y, color, alphaPercentage );
+                    int alphaPercentageInBitmap = (int)( (float)alpha / 255 * 100 );
+                    int alphaPercentageToDraw = (int)( (float)alphaPercentageInBitmap / 100 * this.alphaPercentage );
+                    renderer.setPixel( offsetX + x, offsetY + y, color, alphaPercentageToDraw );
                 }
             }
         }
@@ -212,5 +215,17 @@ public class Text
     public void setLettersToShow( int lettersToShow )
     {
         this.lettersToShow = lettersToShow;
+    }
+
+    public int getAlphaPercentage()
+    {
+        return alphaPercentage;
+    }
+
+    public void setAlphaPercentage( int alphaPercentage )
+    {
+        this.alphaPercentage = alphaPercentage;
+        if( alphaPercentage < 0 ) this.alphaPercentage = 0;
+        if( alphaPercentage > 100 ) this.alphaPercentage = 100;
     }
 }

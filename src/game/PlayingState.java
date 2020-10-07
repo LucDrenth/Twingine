@@ -8,7 +8,7 @@ import engine.graphics.text.Font;
 import engine.graphics.text.Text;
 import engine.input.Input;
 
-import static java.awt.event.KeyEvent.VK_SPACE;
+import static java.awt.event.KeyEvent.*;
 
 public class PlayingState implements GameStateManager
 {
@@ -34,6 +34,7 @@ public class PlayingState implements GameStateManager
         text.setParagraph( true );
         text.setParagraphWidth( 300 );
         text.setShowingSpeed( 3 );
+        text.setAlphaPercentage( 50 );
     }
 
     @Override
@@ -45,6 +46,8 @@ public class PlayingState implements GameStateManager
         {
             text.setLettersToShow( 0 );
         }
+
+        text.setAlphaPercentage( (int)( (float)input.getMouseX() / (float)engine.getWindow().getWidth() * 100 ) );
     }
 
     @Override
