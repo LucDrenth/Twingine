@@ -26,15 +26,14 @@ public class PlayingState implements GameStateManager
         input = engine.getInput();
         renderer = engine.getRenderer();
 
-        roboto = new Font( "Roboto-Regular_15.png", 14f );
         Font robotoTTF = new Font( "Roboto-Regular.png", 18f );
         text = new Text( "Hallo, ik ben Luc Drenth. Ik ben 22 jaar oud en ik ben software developer.", robotoTTF, ColorPalette.getWhite() );
-        text.setOffsets( 250, 250 );
         text.setString( "Welcome to Twingine. This is my software renderer which I am going to use to make a game. But first, I am going to make a photo editing program. I already programmed in a lot of, if not all, filters and effects for images (or actually for pixel[]'s)." );
         text.setParagraph( true );
         text.setParagraphWidth( 300 );
-        text.setShowingSpeed( 3 );
-        text.setAlphaPercentage( 50 );
+        text.setAlphaPercentage( 60 );
+        text.setDrawBetweenX( false, 300, 400 );
+        text.setDrawBetweenY( true, 300, 400 );
     }
 
     @Override
@@ -46,8 +45,6 @@ public class PlayingState implements GameStateManager
         {
             text.setLettersToShow( 0 );
         }
-
-        text.setAlphaPercentage( (int)( (float)input.getMouseX() / (float)engine.getWindow().getWidth() * 100 ) );
 
         text.update();
     }

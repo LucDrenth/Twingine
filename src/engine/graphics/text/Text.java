@@ -27,6 +27,14 @@ public class Text
     private int showingSpeed;
     private int lettersToShow;
 
+    private boolean drawBetweenX;
+    private int drawFromX;
+    private int drawUntilX;
+
+    private boolean drawBetweenY;
+    private int drawFromY;
+    private int drawUntilY;
+
     public Text( String string, Font font, int color )
     {
         setString( string );
@@ -34,7 +42,7 @@ public class Text
         this.color = color;
         alphaPercentage = 100;
 
-        showLetterForLetter = true;
+        showLetterForLetter = false;
         spaceBetweenLetters = 0;
         spaceBetweenWords = font.getCharacterWidths()[ ' ' ];
 
@@ -112,7 +120,14 @@ public class Text
                 {
                     int alphaPercentageInBitmap = (int)( (float)alpha / 255 * 100 );
                     int alphaPercentageToDraw = (int)( (float)alphaPercentageInBitmap / 100 * this.alphaPercentage );
-                    renderer.setPixel( offsetX + x, offsetY + y, color, alphaPercentageToDraw );
+
+                    if( !drawBetweenX || ( offsetX + x >= drawFromX && offsetX + x <= drawUntilX ) )
+                    {
+                        if( !drawBetweenY || ( offsetY + y >= drawFromY && offsetY + y <= drawUntilY ) )
+                        {
+                            renderer.setPixel( offsetX + x, offsetY + y, color, alphaPercentageToDraw );
+                        }
+                    }
                 }
             }
         }
@@ -229,5 +244,19 @@ public class Text
         this.alphaPercentage = alphaPercentage;
         if( alphaPercentage < 0 ) this.alphaPercentage = 0;
         if( alphaPercentage > 100 ) this.alphaPercentage = 100;
+    }
+
+    public void setDrawBetweenX( boolean drawBetweenX, int drawFromX, int drawUntilX )
+    {
+        this.drawBetweenX = drawBetweenX;
+        this.drawFromX = drawFromX;
+        this.drawUntilX = drawUntilX;
+    }
+
+    public void setDrawBetweenY( boolean drawBetweenY, int drawFromY, int drawUntilY )
+    {
+        this.drawBetweenY = drawBetweenY;
+        this.drawFromY = drawFromY;
+        this.drawUntilY = drawUntilY;
     }
 }
