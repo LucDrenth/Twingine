@@ -32,8 +32,10 @@ public class PlayingState implements GameStateManager
         text.setParagraph( true );
         text.setParagraphWidth( 300 );
         text.setAlphaPercentage( 60 );
-        text.setDrawBetweenX( false, 300, 400 );
-        text.setDrawBetweenY( true, 300, 400 );
+        text.setDrawBetweenX( true );
+        text.setDrawBetweenXPoints( 300, 400 );
+        text.setDrawBetweenY( true );
+        text.setDrawBetweenYPoints( 300, 400 );
     }
 
     @Override

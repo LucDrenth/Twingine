@@ -42,7 +42,6 @@ public class Text
         this.color = color;
         alphaPercentage = 100;
 
-        showLetterForLetter = false;
         spaceBetweenLetters = 0;
         spaceBetweenWords = font.getCharacterWidths()[ ' ' ];
 
@@ -246,16 +245,24 @@ public class Text
         if( alphaPercentage > 100 ) this.alphaPercentage = 100;
     }
 
-    public void setDrawBetweenX( boolean drawBetweenX, int drawFromX, int drawUntilX )
+    public void setDrawBetweenX( boolean drawBetweenX )
     {
         this.drawBetweenX = drawBetweenX;
+    }
+
+    public void setDrawBetweenXPoints( int drawFromX, int drawUntilX )
+    {
         this.drawFromX = drawFromX;
         this.drawUntilX = drawUntilX;
     }
 
-    public void setDrawBetweenY( boolean drawBetweenY, int drawFromY, int drawUntilY )
+    public void setDrawBetweenY( boolean drawBetweenY )
     {
         this.drawBetweenY = drawBetweenY;
+    }
+
+    public void setDrawBetweenYPoints( int drawFromY, int drawUntilY )
+    {
         this.drawFromY = drawFromY;
         this.drawUntilY = drawUntilY;
     }
