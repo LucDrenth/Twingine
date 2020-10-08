@@ -33,26 +33,28 @@ public class BakedText
         // loop trough all word
         for( int wordIndex = 0; wordIndex < text.getWords().length; wordIndex++ )
         {
-            // loop trough all letters of the word
-            for( int characterIndex = 0; characterIndex < text.getWords()[ wordIndex ].length(); characterIndex++ )
-            {
-                int unicode = text.getWords()[ wordIndex ].codePointAt( characterIndex );
-                bakeLetter( text, unicode, pixelData, characterOffset );
-                characterOffset.addX( text.getFont().getCharacterWidths()[ unicode ] + text.getSpaceBetweenLetters() );
-            }
-
-            characterOffset.addX( text.getSpaceBetweenWords() );
-
-            if( text.isParagraph() &&
-                wordIndex < text.getWords().length - 1 && // is not the last word
-                characterOffset.getX() + text.getWordWidth( text.getWords()[ wordIndex + 1 ] ) > text.getParagraphWidth() ) // adding the next word exceeds the paragraph width
-            {
-                characterOffset.setX( 0 );
-                characterOffset.addY( text.getFont().getHeight() + text.getSpaceBetweenLines() );
-            }
+            bakeWord( text, wordIndex, characterOffset, pixelData );
         }
 
         return pixelData;
+    }
+
+    private static void bakeWord( Text text, int wordIndex, Point characterOffset, PixelData pixelData )
+    {
+        for( int characterIndex = 0; characterIndex < text.getWords()[ wordIndex ].length(); characterIndex++ )
+        {
+            int unicode = text.getWords()[ wordIndex ].codePointAt( characterIndex );
+            bakeLetter( text, unicode, pixelData, characterOffset );
+            characterOffset.addX( text.getFont().getCharacterWidths()[ unicode ] + text.getSpaceBetweenLetters() );
+        }
+
+        characterOffset.addX( text.getSpaceBetweenWords() );
+
+        if( wordShouldWrapAround( text, wordIndex, characterOffset ) ) // adding the next word exceeds the paragraph width
+        {
+            characterOffset.setX( 0 );
+            characterOffset.addY( text.getFont().getHeight() + text.getSpaceBetweenLines() );
+        }
     }
 
     private static void bakeLetter( Text text, int unicode, PixelData pixelData, Point characterOffset )
@@ -73,6 +75,13 @@ public class BakedText
                 }
             }
         }
+    }
+
+    private static boolean wordShouldWrapAround( Text text, int wordIndex, Point characterOffset )
+    {
+        return text.isParagraph() &&
+               wordIndex < text.getWords().length - 1 && // is not the last word
+               characterOffset.getX() + text.getWordWidth( text.getWords()[ wordIndex + 1 ] ) > text.getParagraphWidth(); // check if adding the word exceeds the paragraph width
     }
 
     private static int calculateBakedWidth( Text text )
