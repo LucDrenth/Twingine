@@ -132,7 +132,7 @@ public class Text
         }
     }
 
-    private int getWordWidth( String string )
+    public int getWordWidth( String string )
     {
         int wordWidth = 0;
 
@@ -265,5 +265,35 @@ public class Text
     {
         this.drawFromY = drawFromY;
         this.drawUntilY = drawUntilY;
+    }
+
+    public String[] getWords()
+    {
+        return words;
+    }
+
+    public boolean isParagraph()
+    {
+        return isParagraph;
+    }
+
+    public int getColor()
+    {
+        return color;
+    }
+
+    public int getParagraphWidth()
+    {
+        return paragraphWidth;
+    }
+
+    public int getSpaceBetweenLines()
+    {
+        return spaceBetweenLines;
+    }
+
+    public Font getFont()
+    {
+        return font;
     }
 }
