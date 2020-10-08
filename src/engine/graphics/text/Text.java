@@ -77,26 +77,7 @@ public class Text
 
         for( int wordIndex = 0; wordIndex < words.length; wordIndex++ )
         {
-            for( int characterIndex = 0; characterIndex < words[ wordIndex ].length(); characterIndex++ )
-            {
-                int unicode = words[ wordIndex ].codePointAt( characterIndex );
-
-                if( showLetterForLetter )
-                {
-                    if( lettersShown < lettersToShow )
-                    {
-                        drawLetter( renderer, unicode, characterOffset );
-                        characterOffset.addX( font.getCharacterWidths()[ unicode ] + spaceBetweenLetters );
-                        lettersShown++;
-                    }
-                }
-                else
-                {
-                    drawLetter( renderer, unicode, characterOffset );
-                    characterOffset.addX( font.getCharacterWidths()[ unicode ] + spaceBetweenLetters );
-                }
-            }
-
+            drawWord( wordIndex, lettersShown, renderer, characterOffset );
             characterOffset.addX( spaceBetweenWords );
 
             if( wordShouldGoOnNextLine( wordIndex, characterOffset ) ) // adding the next word exceeds the paragraph width
@@ -127,6 +108,29 @@ public class Text
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void drawWord( int wordIndex, int lettersShown, Renderer renderer, Point characterOffset )
+    {
+        for( int characterIndex = 0; characterIndex < words[ wordIndex ].length(); characterIndex++ )
+        {
+            int unicode = words[ wordIndex ].codePointAt( characterIndex );
+
+            if( showLetterForLetter )
+            {
+                if( lettersShown < lettersToShow )
+                {
+                    drawLetter( renderer, unicode, characterOffset );
+                    characterOffset.addX( font.getCharacterWidths()[ unicode ] + spaceBetweenLetters );
+                    lettersShown++;
+                }
+            }
+            else
+            {
+                drawLetter( renderer, unicode, characterOffset );
+                characterOffset.addX( font.getCharacterWidths()[ unicode ] + spaceBetweenLetters );
             }
         }
     }
