@@ -282,6 +282,11 @@ public class Text
         return color;
     }
 
+    public void setColor( int color )
+    {
+        this.color = color;
+    }
+
     public int getParagraphWidth()
     {
         return paragraphWidth;

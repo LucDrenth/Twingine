@@ -27,7 +27,6 @@ public class BakedText
         int width = calculateBakedWidth( text );
         int height = calculateBakedHeight( text );
         PixelData pixelData = new PixelData( width, height );
-        System.out.println( "width: " + width + ", height: " + height );
 
         int characterOffsetX = 0;
         int characterOffsetY = 0;
@@ -49,16 +48,11 @@ public class BakedText
                         if( alpha > 0 )
                         {
                             int alphaPercentageInBitmap = (int)( (float)alpha / 255 * 100 );
-                            System.out.println( alphaPercentageInBitmap );
                             int alphaPercentageToSet = (int)( (float)alphaPercentageInBitmap / 100 * text.getAlphaPercentage() );
                             Color textColor = new Color( text.getColor() );
                             Color colorAfterAlpha = new Color( textColor.getRed(), textColor.getGreen(), textColor.getBlue(), (int)( (float)alphaPercentageToSet * 2.55f ) );
 
-                            int arrayIndex = (x + characterIndex) * (y + characterOffsetY);
-                            if( x + characterOffsetX <= pixelData.getWidth() && y + characterOffsetY <= pixelData.getHeight() )
-                            {
-                                pixelData.setPixel( x + characterOffsetX, y + characterOffsetY, colorAfterAlpha.hashCode() );
-                            }
+                            pixelData.setPixel( x + characterOffsetX, y + characterOffsetY, colorAfterAlpha.hashCode() );
                         }
                     }
                 }
@@ -122,13 +116,15 @@ public class BakedText
                 if( width + text.getWordWidth( word ) > text.getParagraphWidth() )
                 {
                     width = text.getWordWidth( word );
-                    height += text.getFont().getHeight();
                     height += text.getSpaceBetweenLines();
+                    height += text.getFont().getHeight();
                 }
                 else
                 {
                     width += text.getWordWidth( word );
                 }
+
+                width += text.getSpaceBetweenWords();
             }
 
             return height;

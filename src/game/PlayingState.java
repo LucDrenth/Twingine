@@ -33,9 +33,10 @@ public class PlayingState implements GameStateManager
         text.setString( "Welcome to Twingine. This is my software renderer which I am going to use to make a game. But first, I am going to make a photo editing program. I already programmed in a lot of, if not all, filters and effects for images (or actually for pixel[]'s)." );
         text.setParagraph( true );
         text.setParagraphWidth( 300 );
+        text.setColor( 0xff_f3c802 );
 
         bakedText = new BakedText( text );
-//        bakedText.getPixelData().setPixels( Blur.blur( bakedText.getPixelData().getPixels(), bakedText.getPixelData().getWidth(), bakedText.getPixelData().getHeight(), 100, false ) );
+
     }
 
     @Override
