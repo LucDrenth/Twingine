@@ -22,14 +22,13 @@ public class BakedText
         renderer.draw( pixelData, offset );
     }
 
-    private PixelData bake( Text text )
+    private static PixelData bake( Text text )
     {
         int width = calculateBakedWidth( text );
         int height = calculateBakedHeight( text );
         PixelData pixelData = new PixelData( width, height );
 
-        int characterOffsetX = 0;
-        int characterOffsetY = 0;
+        Point characterOffset = new Point( 0, 0 );
 
         // loop trough all word
         for( int wordIndex = 0; wordIndex < text.getWords().length; wordIndex++ )
@@ -38,43 +37,45 @@ public class BakedText
             for( int characterIndex = 0; characterIndex < text.getWords()[ wordIndex ].length(); characterIndex++ )
             {
                 int unicode = text.getWords()[ wordIndex ].codePointAt( characterIndex );
-
-                // loop trough bitmap at letter its position
-                for( int x = 0; x < text.getFont().getCharacterWidths()[ unicode ]; x++ )
-                {
-                    for( int y = 1; y < text.getFont().getHeight(); y++ )
-                    {
-                        int alpha = ( text.getFont().getBitmap().getPixel( x + text.getFont().getCharacterOffsets()[ unicode ], y ) >> 24 ) & 0xff;
-                        if( alpha > 0 )
-                        {
-                            int alphaPercentageInBitmap = (int)( (float)alpha / 255 * 100 );
-                            int alphaPercentageToSet = (int)( (float)alphaPercentageInBitmap / 100 * text.getAlphaPercentage() );
-                            Color textColor = new Color( text.getColor() );
-                            Color colorAfterAlpha = new Color( textColor.getRed(), textColor.getGreen(), textColor.getBlue(), (int)( (float)alphaPercentageToSet * 2.55f ) );
-
-                            pixelData.setPixel( x + characterOffsetX, y + characterOffsetY, colorAfterAlpha.hashCode() );
-                        }
-                    }
-                }
-
-                characterOffsetX += text.getFont().getCharacterWidths()[ unicode ] + text.getSpaceBetweenLetters();
+                bakeLetter( text, unicode, pixelData, characterOffset );
+                characterOffset.addX( text.getFont().getCharacterWidths()[ unicode ] + text.getSpaceBetweenLetters() );
             }
 
-            characterOffsetX += text.getSpaceBetweenWords();
+            characterOffset.addX( text.getSpaceBetweenWords() );
 
             if( text.isParagraph() &&
                 wordIndex < text.getWords().length - 1 && // is not the last word
-                characterOffsetX + text.getWordWidth( text.getWords()[ wordIndex + 1 ] ) > text.getParagraphWidth() ) // adding the next word exceeds the paragraph width
+                characterOffset.getX() + text.getWordWidth( text.getWords()[ wordIndex + 1 ] ) > text.getParagraphWidth() ) // adding the next word exceeds the paragraph width
             {
-                characterOffsetX = 0;
-                characterOffsetY += text.getFont().getHeight() + text.getSpaceBetweenLines();
+                characterOffset.setX( 0 );
+                characterOffset.addY( text.getFont().getHeight() + text.getSpaceBetweenLines() );
             }
         }
 
         return pixelData;
     }
 
-    private int calculateBakedWidth( Text text )
+    private static void bakeLetter( Text text, int unicode, PixelData pixelData, Point characterOffset )
+    {
+        for( int x = 0; x < text.getFont().getCharacterWidths()[ unicode ]; x++ )
+        {
+            for( int y = 1; y < text.getFont().getHeight(); y++ )
+            {
+                int alpha = ( text.getFont().getBitmap().getPixel( x + text.getFont().getCharacterOffsets()[ unicode ], y ) >> 24 ) & 0xff;
+                if( alpha > 0 )
+                {
+                    int alphaPercentageInBitmap = (int)( (float)alpha / 255 * 100 );
+                    int alphaPercentageToSet = (int)( (float)alphaPercentageInBitmap / 100 * text.getAlphaPercentage() );
+                    Color textColor = new Color( text.getColor() );
+                    Color colorAfterAlpha = new Color( textColor.getRed(), textColor.getGreen(), textColor.getBlue(), (int)( (float)alphaPercentageToSet * 2.55f ) );
+
+                    pixelData.setPixel( x + characterOffset.getX(), y + characterOffset.getY(), colorAfterAlpha.hashCode() );
+                }
+            }
+        }
+    }
+
+    private static int calculateBakedWidth( Text text )
     {
         int width = 0;
 
@@ -100,7 +101,7 @@ public class BakedText
         return width - text.getSpaceBetweenWords();
     }
 
-    private int calculateBakedHeight( Text text )
+    private static int calculateBakedHeight( Text text )
     {
         if( !text.isParagraph() )
         {
