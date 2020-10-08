@@ -3,13 +3,10 @@ package game;
 import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
-import engine.graphics.color.ColorPalette;
-import engine.graphics.text.BakedText;
-import engine.graphics.text.Font;
-import engine.graphics.text.Text;
+import engine.graphics.image.AnimationMode;
+import engine.graphics.image.Image;
+import engine.graphics.image.Sprite;
 import engine.input.Input;
-
-import static java.awt.event.KeyEvent.VK_SPACE;
 
 public class PlayingState implements GameStateManager
 {
@@ -17,46 +14,35 @@ public class PlayingState implements GameStateManager
     private Input input;
     private Renderer renderer;
 
-    private Font roboto;
-    private Text text;
-    private BakedText bakedText;
+    private Sprite sprite;
+    private Image image;
 
     public PlayingState( Engine engine )
     {
         this.engine = engine;
-
-        input = engine.getInput();
         renderer = engine.getRenderer();
+        input = engine.getInput();
 
-        Font robotoTTF = new Font( "Roboto-Regular.png", 15f );
-        text = new Text( "Hallo, ik ben Luc Drenth. Ik ben 22 jaar oud en ik ben software developer.", robotoTTF, ColorPalette.getWhite() );
-        text.setString( "Welcome to Twingine. This is my software renderer which I am going to use to make a game. But first, I am going to make a photo editing program. I already programmed in a lot of, if not all, filters and effects for images (or actually for pixel[]'s)." );
-        text.setParagraph( true );
-        text.setParagraphWidth( 300 );
-        text.setColor( 0xff_f3c802 );
+        sprite = new Sprite( "/test/explosion.png", 50, 50 );
+        sprite.setAnimationMode( AnimationMode.LOOPING );
+        sprite.countXTilesPerRowWithEmptySpaces();
+        sprite.setOffsets( 10, 10 );
 
-        bakedText = new BakedText( text );
-
+        image = new Image( "/test/lion.png" );
+        image.setOffsets( engine.getWindow().getWidth() / 2 - image.getWidth() / 2, engine.getWindow().getHeight() / 2 - image.getHeight() / 2 );
     }
 
     @Override
     public void update()
     {
-        text.setOffsets( input.getMouseX(), input.getMouseY() );
-
-        if( input.isKeyDown( VK_SPACE ) )
-        {
-            text.setLettersToShow( 0 );
-        }
-
-        text.update();
+        sprite.update();
     }
 
     @Override
     public void draw()
     {
-        text.draw( renderer );
-        bakedText.draw( renderer );
+        sprite.draw( renderer );
+        image.draw( renderer );
     }
 
 }

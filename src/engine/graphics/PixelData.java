@@ -30,6 +30,11 @@ public class PixelData
         return pixels[ x + y * width ];
     }
 
+    public int getPixel( int arrayIndex )
+    {
+        return pixels[ arrayIndex ];
+    }
+
     public void setPixels( int[] pixels )
     {
         this.pixels = pixels;

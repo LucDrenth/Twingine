@@ -30,7 +30,7 @@ public class Sprite
         xTile = 0f;
         yTile = 0;
         xTilesPerRow = getXTilesPerRow();
-        animationSpeed = 10;
+        animationSpeed = 12f;
         playingBackwards = false;
     }
 
@@ -169,7 +169,7 @@ public class Sprite
         {
             for( int y = 0; y < height; y++ )
             {
-                renderer.setPixel( x + image.getOffsetX(), y + image.getOffsetY(), image.getPixels()[ startX + x + (startY + y) * image.getWidth() ] );
+                renderer.setPixel( x + image.getOffsetX(), y + image.getOffsetY(), image.getPixel( x + startX, y + startY ) );
             }
         }
     }
@@ -228,8 +228,8 @@ public class Sprite
         this.yTile = yTile;
     }
 
-    public void blur( int blurPercentage )
+    public void setAnimationSpeed( float animationSpeed )
     {
-        image.blur( blurPercentage );
+        this.animationSpeed = animationSpeed;
     }
 }
