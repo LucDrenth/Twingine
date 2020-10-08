@@ -11,6 +11,12 @@ public class Point
         this.y = y;
     }
 
+    public Point( Point point )
+    {
+        this.x = point.getX();
+        this.y = point.getY();
+    }
+
     public int getX()
     {
         return x;
@@ -61,5 +67,17 @@ public class Point
     {
         x -= point.getX();
         y -= point.getY();
+    }
+
+    public void set( Point point )
+    {
+        x = point.getX();
+        y = point.getY();
+    }
+
+    public void set( int x, int y )
+    {
+        this.x = x;
+        this.y = y;
     }
 }

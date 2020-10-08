@@ -1,6 +1,7 @@
 package engine.graphics.text;
 
 import engine.graphics.Renderer;
+import engine.twinUtils.Point;
 import engine.twinUtils.StringUtils;
 
 public class Text
@@ -10,8 +11,7 @@ public class Text
     private String string;
     private String[] words;
 
-    private int offsetX;
-    private int offsetY;
+    private Point offset;
 
     private int color;
     private int alphaPercentage;
@@ -42,6 +42,8 @@ public class Text
         this.color = color;
         alphaPercentage = 100;
 
+        offset = new Point( 0, 0 );
+
         spaceBetweenLetters = 0;
         spaceBetweenWords = font.getCharacterWidths()[ ' ' ];
 
@@ -69,8 +71,7 @@ public class Text
 
     public void draw( Renderer renderer )
     {
-        int characterOffsetX = offsetX;
-        int characterOffsetY = offsetY;
+        Point characterOffset = new Point( offset );
 
         int lettersShown = 0; // keeps track of how many letters are already shown
 
@@ -84,31 +85,29 @@ public class Text
                 {
                     if( lettersShown < lettersToShow )
                     {
-                        drawLetter( renderer, unicode, characterOffsetX, characterOffsetY );
-                        characterOffsetX += font.getCharacterWidths()[ unicode ] + spaceBetweenLetters;
+                        drawLetter( renderer, unicode, characterOffset );
+                        characterOffset.addX( font.getCharacterWidths()[ unicode ] + spaceBetweenLetters );
                         lettersShown++;
                     }
                 }
                 else
                 {
-                    drawLetter( renderer, unicode, characterOffsetX, characterOffsetY );
-                    characterOffsetX += font.getCharacterWidths()[ unicode ] + spaceBetweenLetters;
+                    drawLetter( renderer, unicode, characterOffset );
+                    characterOffset.addX( font.getCharacterWidths()[ unicode ] + spaceBetweenLetters );
                 }
             }
 
-            characterOffsetX += spaceBetweenWords;
+            characterOffset.addX( spaceBetweenWords );
 
-            if( isParagraph &&
-                wordIndex < words.length - 1 && // is not the last word
-                characterOffsetX + getWordWidth( words[ wordIndex + 1 ] ) > paragraphWidth + offsetX ) // adding the next word exceeds the paragraph width
+            if( wordShouldGoOnNextLine( wordIndex, characterOffset ) ) // adding the next word exceeds the paragraph width
             {
-                characterOffsetX = offsetX;
-                characterOffsetY += font.getHeight() + spaceBetweenLines;
+                characterOffset.setX( offset.getX() );
+                characterOffset.addY( font.getHeight() + spaceBetweenLines );
             }
         }
     }
 
-    private void drawLetter( Renderer renderer, int unicode, int offsetX, int offsetY )
+    private void drawLetter( Renderer renderer, int unicode, Point offset )
     {
         for( int x = 0; x < font.getCharacterWidths()[ unicode ]; x++ )
         {
@@ -120,16 +119,23 @@ public class Text
                     int alphaPercentageInBitmap = (int)( (float)alpha / 255 * 100 );
                     int alphaPercentageToDraw = (int)( (float)alphaPercentageInBitmap / 100 * this.alphaPercentage );
 
-                    if( !drawBetweenX || ( offsetX + x >= drawFromX && offsetX + x <= drawUntilX ) )
+                    if( !drawBetweenX || ( offset.getX() + x >= drawFromX && offset.getX() + x <= drawUntilX ) )
                     {
-                        if( !drawBetweenY || ( offsetY + y >= drawFromY && offsetY + y <= drawUntilY ) )
+                        if( !drawBetweenY || ( offset.getY() + y >= drawFromY && offset.getY() + y <= drawUntilY ) )
                         {
-                            renderer.setPixel( offsetX + x, offsetY + y, color, alphaPercentageToDraw );
+                            renderer.setPixel( offset.getX() + x, offset.getY() + y, color, alphaPercentageToDraw );
                         }
                     }
                 }
             }
         }
+    }
+
+    private boolean wordShouldGoOnNextLine( int wordIndex, Point characterOffset )
+    {
+        return isParagraph &&
+               wordIndex < words.length - 1 && // is not the last word
+               characterOffset.getX() + getWordWidth( words[ wordIndex + 1 ] ) > paragraphWidth + offset.getX(); // check if adding the word exceeds paragraph width
     }
 
     public int getWordWidth( String string )
@@ -159,8 +165,7 @@ public class Text
 
     public void setOffsets( int offsetX, int offsetY )
     {
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
+        offset.set( offsetX, offsetY );
     }
 
     public int getSpaceBetweenLetters()
