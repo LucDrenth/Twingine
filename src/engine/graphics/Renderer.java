@@ -2,6 +2,7 @@ package engine.graphics;
 
 import engine.Engine;
 import engine.graphics.color.ColorPalette;
+import engine.twinUtils.Point;
 
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
@@ -12,7 +13,7 @@ public class Renderer
 
     private int pixelsWidth;
     private int pixelsHeight;
-    private int pixels[];
+    private int[] pixels;
 
     public Renderer( Engine engine )
     {
@@ -52,6 +53,17 @@ public class Renderer
                 pixels[ x + y * pixelsWidth ] = color;
             else
                 pixels[ x + y * pixelsWidth ] = getBlendedPixelColor( x, y, color, alpha );
+        }
+    }
+
+    public void draw( PixelData pixelData, Point point )
+    {
+        for( int x = 0; x < pixelData.getWidth(); x++ )
+        {
+            for( int y = 0; y < pixelData.getHeight(); y++ )
+            {
+                setPixel( point.getX() + x, point.getY() + y, pixelData.getPixel( x, y ) );
+            }
         }
     }
 
