@@ -1,23 +1,24 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
 import engine.twinUtils.TwinUtils;
 
 import java.awt.*;
 
 public class Engrave
 {
-    public static int[] engrave( int[] pixels, int pixelsWidth, int pixelsHeight, int extraX, int extraY, int extraColor )
+    public static PixelData engrave( PixelData pixels, int extraX, int extraY, int extraColor )
     {
-        int[] newPixels = new int[ pixels.length ];
+        PixelData newPixels = new PixelData( pixels.getWidth(), pixels.getHeight() );
 
-        for( int x = 0; x < pixelsWidth; x++ )
+        for( int x = 0; x < pixels.getWidth(); x++ )
         {
-            for( int y = 0; y < pixelsHeight; y++ )
+            for( int y = 0; y < pixels.getHeight(); y++ )
             {
-                if( TwinUtils.pixelExists( pixelsWidth, pixelsHeight, x + extraX, y + extraY ) )
+                if( TwinUtils.pixelExists( pixels.getWidth(), pixels.getHeight(), x + extraX, y + extraY ) )
                 {
-                    Color color = new Color( pixels[ x + y * pixelsWidth ] );
-                    Color neighbourColor = new Color( pixels[ ( x + extraX ) + ( y + extraY ) * pixelsWidth ] );
+                    Color color = new Color( pixels.getPixel( x, y ) );
+                    Color neighbourColor = new Color( pixels.getPixel( x + extraX, y + extraY ) );
 
                     int newRed = color.getRed() + extraColor - neighbourColor.getRed();
                     if( newRed < 0 ) newRed = 0;
@@ -31,7 +32,7 @@ public class Engrave
                     if( newBlue < 0 ) newBlue = 0;
                     if( newBlue > 255 ) newBlue = 255;
 
-                    newPixels[ x + y * pixelsWidth ] = new Color( newRed, newGreen, newBlue ).hashCode();
+                    newPixels.setPixel( x, y, new Color( newRed, newGreen, newBlue ).hashCode() );
                 }
             }
         }

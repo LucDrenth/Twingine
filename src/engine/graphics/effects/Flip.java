@@ -1,31 +1,33 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
+
 public class Flip
 {
-    public static int[] horizontal( int[] pixels, int pixelsWidth, int pixelsHeight )
+    public static PixelData horizontal( PixelData pixels )
     {
-        int[] flippedPixels = new int[ pixels.length ];
+        PixelData flippedPixels = new PixelData( pixels.getWidth(), pixels.getHeight() );
 
-        for( int x = 0; x < pixelsWidth; x++ )
+        for( int x = 0; x < pixels.getWidth(); x++ )
         {
-            for( int y = 0; y < pixelsHeight; y++ )
+            for( int y = 0; y < pixels.getHeight(); y++ )
             {
-                flippedPixels[ ( pixelsWidth - x - 1 ) + y * pixelsWidth ] = pixels[ x + y * pixelsWidth ];
+                flippedPixels.setPixel( ( pixels.getWidth() - x - 1 ), + y, pixels.getPixel( x, y ) );
             }
         }
 
         return flippedPixels;
     }
 
-    public static int[] vertical( int[] pixels, int pixelsWidth, int pixelsHeight )
+    public static PixelData vertical( PixelData pixels )
     {
-        int[] flippedPixels = new int[ pixels.length ];
+        PixelData flippedPixels = new PixelData( pixels.getWidth(), pixels.getHeight() );
 
-        for( int x = 0; x < pixelsWidth; x++ )
+        for( int x = 0; x < pixels.getWidth(); x++ )
         {
-            for( int y = 0; y < pixelsHeight; y++ )
+            for( int y = 0; y < pixels.getHeight(); y++ )
             {
-                flippedPixels[ x + ( pixelsHeight - y - 1 ) * pixelsWidth ] = pixels[ x + y * pixelsWidth ];
+                flippedPixels.setPixel( x, pixels.getHeight() - y - 1, pixels.getPixel( x, y )  );
             }
         }
 

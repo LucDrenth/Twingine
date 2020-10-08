@@ -69,4 +69,24 @@ public class EffectBox
     {
         return pixelData.getHeight();
     }
+
+    public PixelData getPixelData()
+    {
+        return pixelData;
+    }
+
+    public void setPixelData( PixelData pixelData )
+    {
+        this.pixelData = pixelData;
+    }
+
+    public int getOffsetX()
+    {
+        return offset.getX();
+    }
+
+    public int getOffsetY()
+    {
+        return offset.getY();
+    }
 }

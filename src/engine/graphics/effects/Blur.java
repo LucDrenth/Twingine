@@ -1,5 +1,7 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
+
 import java.awt.*;
 
 public class Blur
@@ -9,52 +11,45 @@ public class Blur
     private static int loopStart = -( ( blurBoxSize - 1 ) / 2 );
     private static int loopEnd = loopStart * -1;
 
-    public static int[] blur( int[] pixels, int pixelsWidth, int pixelsHeight, int blurPercentage, boolean blurInbound )
+    public static PixelData blur( PixelData pixels, int blurPercentage, boolean blurInbound )
     {
-        int[] newPixels = new int[ pixels.length ];
-        System.arraycopy( pixels, 0, newPixels, 0, pixels.length );
+        int[] newPixels = new int[ pixels.getPixels().length ];
+        System.arraycopy( pixels.getPixels(), 0, newPixels, 0, pixels.getPixels().length );
 
         // keep track of a currentBlurPercentage variable that is never higher than maxBlurPercentagePerIteration to
         // handle a blurPercentage above 100
-        int currentBlurPercentage;
-        if( blurPercentage > maxBlurPercentagePerIteration )
-            currentBlurPercentage = maxBlurPercentagePerIteration;
-        else
-            currentBlurPercentage = blurPercentage;
+        int currentBlurPercentage = Math.min( blurPercentage, maxBlurPercentagePerIteration );
 
         while( blurPercentage > 0 )
         {
             // loop trough all pixels to calculate and set the blurred pixel value to a copied array of pixels
-            for( int x = 0; x < pixelsWidth; x++ )
+            for( int x = 0; x < pixels.getWidth(); x++ )
             {
-                for( int y = 0; y < pixelsHeight; y++ )
+                for( int y = 0; y < pixels.getHeight(); y++ )
                 {
-                    int averageColorOfSurroundingPixel = getAverageColorOfSurroundingPixel( pixels, pixelsWidth, pixelsHeight, x, y );
+                    int averageColorOfSurroundingPixel = getAverageColorOfSurroundingPixel( pixels, x, y );
                     int originalColorPercentage = 100 - currentBlurPercentage;
 
-                    if( averageColorOfSurroundingPixel != 0 && ( !blurInbound || getPixel( pixels, pixelsWidth, x, y ) != 0 ) )
+                    if( averageColorOfSurroundingPixel != 0 && ( !blurInbound || pixels.getPixel( x, y ) != 0 ) )
                     {
-                        int newRed = ( new Color( averageColorOfSurroundingPixel ).getRed() * currentBlurPercentage + new Color( getPixel( pixels, pixelsWidth, x, y ) ).getRed() * originalColorPercentage ) / 100;
-                        int newGreen = ( new Color( averageColorOfSurroundingPixel ).getGreen() * currentBlurPercentage + new Color( getPixel( pixels, pixelsWidth, x, y ) ).getGreen() * originalColorPercentage ) / 100;
-                        int newBlue = ( new Color( averageColorOfSurroundingPixel ).getBlue() * currentBlurPercentage + new Color( getPixel( pixels, pixelsWidth, x, y ) ).getBlue() * originalColorPercentage ) / 100;
-                        newPixels[ x + y * pixelsWidth ] = new Color( newRed, newGreen, newBlue ).hashCode();
+                        int newRed = ( new Color( averageColorOfSurroundingPixel ).getRed() * currentBlurPercentage + new Color( pixels.getPixel( x, y ) ).getRed() * originalColorPercentage ) / 100;
+                        int newGreen = ( new Color( averageColorOfSurroundingPixel ).getGreen() * currentBlurPercentage + new Color( pixels.getPixel( x, y ) ).getGreen() * originalColorPercentage ) / 100;
+                        int newBlue = ( new Color( averageColorOfSurroundingPixel ).getBlue() * currentBlurPercentage + new Color( pixels.getPixel( x, y ) ).getBlue() * originalColorPercentage ) / 100;
+                        newPixels[ x + y * pixels.getWidth() ] = new Color( newRed, newGreen, newBlue ).hashCode();
                     }
                     else
-                        newPixels[ x + y * pixelsWidth ] = 0;
+                        newPixels[ x + y * pixels.getWidth() ] = 0;
                 }
             }
 
             // copy the newPixel array to the pixels array to set up for a next iteration
-            System.arraycopy( newPixels, 0, pixels, 0, pixels.length );
+            System.arraycopy( newPixels, 0, pixels.getPixels(), 0, pixels.getPixels().length );
 
             // set the new currentBlurPercentage
             if( blurPercentage > maxBlurPercentagePerIteration )
             {
                 blurPercentage -= maxBlurPercentagePerIteration;
-                if( blurPercentage > maxBlurPercentagePerIteration )
-                    currentBlurPercentage = maxBlurPercentagePerIteration;
-                else
-                    currentBlurPercentage = blurPercentage;
+                currentBlurPercentage = Math.min( blurPercentage, maxBlurPercentagePerIteration );
             }
             else
             {
@@ -63,10 +58,10 @@ public class Blur
 
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
-    private static int getAverageColorOfSurroundingPixel( int[] pixels, int pixelsWidth, int pixelsHeight, int x, int y )
+    private static int getAverageColorOfSurroundingPixel( PixelData pixels, int x, int y )
     {
         int totalRedOfSurroundingPixels = 0;
         int totalGreenOfSurroundingPixels = 0;
@@ -78,12 +73,12 @@ public class Blur
         {
             for( int j = loopStart; j <= loopEnd; j++ )
             {
-                if( pixelExists( pixelsWidth, pixelsHeight, x + i, y + j ) &&
-                    getPixel( pixels, pixelsWidth, x + i, y + j ) != 0 &&
+                if( pixelExists( pixels.getWidth(), pixels.getHeight(), x + i, y + j ) &&
+                    pixels.getPixel( x + i, y + j ) != 0 &&
                     !( i == 0 && j == 0 ) ) // don't add the pixel that needs to be blurred
                 {
                     amountOfSurroundingPixels++;
-                    Color color = new Color( getPixel( pixels, pixelsWidth, x + i, y + j ) );
+                    Color color = new Color( pixels.getPixel( x + i, y + j ) );
                     totalRedOfSurroundingPixels += color.getRed();
                     totalGreenOfSurroundingPixels += color.getGreen();
                     totalBlueOfSurroundingPixels += color.getBlue();
@@ -109,17 +104,12 @@ public class Blur
         return x >= 0 && x < pixelsWidth && y >= 0 && y < pixelsHeight;
     }
 
-    private static int getPixel( int[] pixels, int pixelsWidth, int x, int y )
-    {
-        return pixels[ x + y * pixelsWidth ];
-    }
-
     /*
      * sets the size of the box that surrounds to-be-blurred pixels and takes an average value from
      *
      * should be at least 3 and should be an uneven number
      */
-    private static void setBlurBoxSize( int newBlurBoxSize )
+    public static void setBlurBoxSize( int newBlurBoxSize )
     {
         if( blurBoxSize % 2 == 1 && blurBoxSize >= 3 )
         {
