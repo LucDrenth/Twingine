@@ -207,4 +207,14 @@ public class Image
     {
         this.blurInbound = blurInbound;
     }
+
+    public void setPixelData( PixelData pixelData )
+    {
+        this.pixelData = pixelData;
+    }
+
+    public PixelData getPixelData()
+    {
+        return pixelData;
+    }
 }

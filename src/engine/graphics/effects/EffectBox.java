@@ -1,7 +1,9 @@
 package engine.graphics.effects;
 
-import engine.graphics.Window;
+import engine.graphics.PixelData;
 import engine.graphics.Renderer;
+import engine.graphics.Window;
+import engine.twinUtils.Point;
 import engine.twinUtils.TwinUtils;
 
 /*
@@ -21,12 +23,8 @@ public class EffectBox
     private Renderer renderer;
     private Window window;
 
-    private int[] pixels;
-
-    private int width;
-    private int height;
-    private int offsetX;
-    private int offsetY;
+    private PixelData pixelData;
+    private Point offset;
 
     private int blur;
 
@@ -34,23 +32,19 @@ public class EffectBox
     {
         this.renderer = renderer;
         this.window = window;
-        this.width = width;
-        this.height = height;
 
-        pixels = new int[ width * height ];
-        offsetX = 0;
-        offsetY = 0;
+        pixelData = new PixelData( width, height );
+        offset = new Point( 0, 0 );
     }
 
     public void reset()
     {
-        pixels = new int[ width * height ];
-        for( int x = 0; x < width; x++ )
+        for( int x = 0; x < pixelData.getWidth(); x++ )
         {
-            for( int y = 0; y < height; y++ )
+            for( int y = 0; y < pixelData.getHeight(); y++ )
             {
-                if( TwinUtils.pixelExists( window.getWidth(), window.getHeight(), x + offsetX, y + offsetY ) )
-                    pixels[ x + y * width ] = renderer.getPixel( x + offsetX, y + offsetY );
+                if( TwinUtils.pixelExists( window.getWidth(), window.getHeight(), x + offset.getX(), y + offset.getY() ) )
+                    pixelData.setPixel( x, y, renderer.getPixel( x + offset.getX(), y + offset.getY() ) );
             }
         }
 
@@ -58,73 +52,21 @@ public class EffectBox
 
     public void draw()
     {
-        for( int x = 0; x < width; x++ )
-        {
-            for( int y = 0; y < height; y++ )
-            {
-                renderer.setPixel( x + offsetX, y + offsetY, pixels[ TwinUtils.getPositionForPixel( x, y, width ) ] );
-            }
-        }
-    }
-
-    // EFFECTS (look in the Class of the effects to see the proper values for the parameters or look in the Image class at the same function)
-    public void blur( int blurPercentage, boolean blurInbound ){ pixels = Blur.blur( pixels, width, height, blurPercentage, blurInbound ); }
-    public void toGrayScale(){ pixels = GrayScale.convert( pixels ); }
-    public void toGrayScale( int numberOfGreys ){ pixels = GrayScale.convertUsingCustomNumberOfGrays( pixels, numberOfGreys ); }
-    public void toBlackAndWhite( int border ){ pixels = BlackAndWhite.convert( pixels, border ); }
-    public void shiftHue     ( float shiftAmount     ){ pixels = HSB.shiftHue     ( pixels, shiftAmount     ); }
-    public void addSaturation( float extraSaturation ){ pixels = HSB.addSaturation( pixels, extraSaturation ); }
-    public void addBrightness( float extraBrightness ){ pixels = HSB.addBrightness( pixels, extraBrightness ); }
-    public void setHue       ( float hue        ){ pixels = HSB.setHue( pixels, hue               ); }
-    public void setSaturation( float saturation ){ pixels = HSB.setSaturation( pixels, saturation ); }
-    public void setBrightness( float brightness ){ pixels = HSB.setBrightness( pixels, brightness ); }
-    public void flipHorizontal(){ pixels = Flip.horizontal( pixels, width, height ); }
-    public void flipVertical(){ pixels = Flip.vertical( pixels, width, height ); }
-    public void swapRedAndGreen (){ pixels = RGB.swapRedAndGreen( pixels ); }
-    public void swapRedAndBlue  (){ pixels = RGB.swapRedAndBlue( pixels ); }
-    public void swapGreenAndBlue(){ pixels = RGB.swapGreenAndBlue( pixels ); }
-    public void increaseRed  ( int percentage ){ pixels = RGB.increaseRed  ( pixels, percentage ); }
-    public void increaseGreen( int percentage ){ pixels = RGB.increaseGreen( pixels, percentage ); }
-    public void increaseBlue ( int percentage ){ pixels = RGB.increaseBlue ( pixels, percentage ); }
-    public void changeTemperature( int temperatureChange ){ pixels = Temperature.change( pixels, temperatureChange ); }
-    public void changeTint( int tintChange )
-    {
-        pixels = Tint.change( pixels, tintChange );
-    }
-    public void mix( int spreadWidth, int spreadHeight ){ pixels = Mix.randomizeInsideBox( pixels, width, height, spreadWidth, spreadHeight ); }
-    public void engrave( int shiftX, int shiftY, int extraColor ){ pixels = Engrave.engrave( pixels, width, height, shiftX, shiftY, extraColor ); }
-    public void sepia(){ pixels = Sepia.sepia( pixels ); }
-
-    public void scale( float scaleX, float scaleY )
-    {
-        int[] scaledPixels = Scale.scale( pixels, width, height, scaleX, scaleY );
-        int newWidth = (int)( width * scaleX );
-        int newHeight = (int)( height * scaleY );
-
-        int startX = ( newWidth - width ) / 2;
-        int startY = ( newHeight - height ) / 2;
-        for( int x = 0; x < width; x++ )
-        {
-            for( int y = 0; y < height; y++ )
-            {
-                pixels[ x + y * width ] = scaledPixels[ (x + startX) + (y + startY) * newWidth ];
-            }
-        }
+        renderer.draw( pixelData, offset );
     }
 
     public void setOffsets( int offsetX, int offsetY )
     {
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
+        offset.set( offsetX, offsetY );
     }
 
     public int getWidth()
     {
-        return width;
+        return pixelData.getWidth();
     }
 
     public int getHeight()
     {
-        return height;
+        return pixelData.getHeight();
     }
 }

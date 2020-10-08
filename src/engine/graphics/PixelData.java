@@ -45,6 +45,11 @@ public class PixelData
         pixels[ x + y * width ] = value;
     }
 
+    public void setPixel( int arrayIndex, int value )
+    {
+        pixels[ arrayIndex ] = value;
+    }
+
     public int getWidth()
     {
         return width;

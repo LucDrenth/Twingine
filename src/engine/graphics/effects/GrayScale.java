@@ -1,60 +1,62 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
+
 import java.awt.*;
 
 public class GrayScale
 {
     private static GrayScaleConversionType conversionType = GrayScaleConversionType.LUMA;
 
-    public static int[] convert( int[] pixels )
+    public static PixelData convert( PixelData pixelData )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixelData.getPixels().length ];
 
         switch( conversionType )
         {
             case AVERAGING:
-                newPixels = convertUsingAveraging( pixels );
+                newPixels = convertUsingAveraging( pixelData.getPixels() );
                 break;
             case LUMA:
-                newPixels = convertUsingLuma( pixels );
+                newPixels = convertUsingLuma( pixelData.getPixels() );
                 break;
             case DESATURATION:
-                newPixels = convertUsingDesaturation( pixels );
+                newPixels = convertUsingDesaturation( pixelData.getPixels() );
                 break;
             case DARKEST:
-                newPixels = convertUsingDarkest( pixels );
+                newPixels = convertUsingDarkest( pixelData.getPixels() );
                 break;
             case LIGHTEST:
-                newPixels = convertUsingLightest( pixels );
+                newPixels = convertUsingLightest( pixelData.getPixels() );
                 break;
             case SINGLE_COLOR_CHANNEL_RED:
-                newPixels = convertUsingSingleColorChannelRed( pixels );
+                newPixels = convertUsingSingleColorChannelRed( pixelData.getPixels() );
                 break;
             case SINGLE_COLOR_CHANNEL_GREEN:
-                newPixels = convertUsingSingleColorChannelGreen( pixels );
+                newPixels = convertUsingSingleColorChannelGreen( pixelData.getPixels() );
                 break;
             case SINGLE_COLOR_CHANNEL_BLUE:
-                newPixels = convertUsingSingleColorChannelBlue( pixels );
+                newPixels = convertUsingSingleColorChannelBlue( pixelData.getPixels() );
                 break;
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixelData.getWidth(), pixelData.getHeight() );
     }
 
     // numberOfGrays is an integer that should be a minimum of 2 and a maximum of 256
-    public static int[] convertUsingCustomNumberOfGrays( int[] pixels, int numberOfGrays )
+    public static PixelData convertUsingCustomNumberOfGrays( PixelData pixelData, int numberOfGrays )
     {
-        int[] newPixels = convert( pixels );
+        PixelData newPixelData = convert( pixelData );
 
-        for( int i = 0; i < newPixels.length; i++ )
+        for( int i = 0; i < newPixelData.getPixels().length; i++ )
         {
             float conversionFactor = 255f / ( numberOfGrays - 1 );
-            int oldGrey = new Color( newPixels[ i ] ).getRed();
+            int oldGrey = new Color( newPixelData.getPixel( i ) ).getRed();
             int newGrey = (int)( (int)( oldGrey / conversionFactor ) * conversionFactor );
-            newPixels[ i ] = new Color( newGrey, newGrey, newGrey ).hashCode();
+            newPixelData.setPixel( i, new Color( newGrey, newGrey, newGrey ).hashCode() );
         }
 
-        return newPixels;
+        return newPixelData;
     }
 
     private static int[] convertUsingAveraging( int[] pixels )

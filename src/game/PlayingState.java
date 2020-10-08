@@ -3,10 +3,13 @@ package game;
 import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
+import engine.graphics.effects.GrayScale;
 import engine.graphics.image.AnimationMode;
 import engine.graphics.image.Image;
 import engine.graphics.image.Sprite;
 import engine.input.Input;
+
+import static java.awt.event.KeyEvent.VK_SPACE;
 
 public class PlayingState implements GameStateManager
 {
@@ -36,6 +39,11 @@ public class PlayingState implements GameStateManager
     public void update()
     {
         sprite.update();
+
+        if( input.isKeyDown( VK_SPACE ) )
+        {
+            image.setPixelData( GrayScale.convert( image.getPixelData() ) );
+        }
     }
 
     @Override
