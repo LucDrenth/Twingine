@@ -18,11 +18,47 @@ public class Scale
         return getScaledImage( pixels, newWidth, newHeight );
     }
 
+    public static PixelData scale( PixelData pixels, int scaleFactor )
+    {
+        int newWidth = pixels.getWidth() * scaleFactor;
+        int newHeight = pixels.getHeight() * scaleFactor;
+        PixelData pixelData = new PixelData( newWidth, newHeight );
+
+        for( int x = 0; x < newWidth; x++ )
+        {
+            for( int y = 0; y < newHeight; y++ )
+            {
+                int newPixelValue = pixels.getPixel( x / scaleFactor, y / scaleFactor );
+                pixelData.setPixel( x, y, newPixelValue );
+            }
+        }
+
+        return pixelData;
+    }
+
     public static PixelData scale( PixelData pixels, float scaleFactorX, float scaleFactorY )
     {
         int newWidth = (int)( pixels.getWidth() * scaleFactorX );
         int newHeight = (int)( pixels.getHeight() * scaleFactorY );
         return getScaledImage( pixels, newWidth, newHeight );
+    }
+
+    public static PixelData scale( PixelData pixels, int scaleFactorX, int scaleFactorY )
+    {
+        int newWidth = pixels.getWidth() * scaleFactorX;
+        int newHeight = pixels.getHeight() * scaleFactorY;
+        PixelData pixelData = new PixelData( newWidth, newHeight );
+
+        for( int x = 0; x < newWidth; x++ )
+        {
+            for( int y = 0; y < newHeight; y++ )
+            {
+                int newPixelValue = pixels.getPixel( x / scaleFactorX, y / scaleFactorY );
+                pixelData.setPixel( x, y, newPixelValue );
+            }
+        }
+
+        return pixelData;
     }
 
     private static PixelData getScaledImage( PixelData pixels, int newWidth, int newHeight )
