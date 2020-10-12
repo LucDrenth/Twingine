@@ -1,5 +1,6 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
 import engine.twinUtils.TwinUtils;
 
 import java.awt.*;
@@ -10,37 +11,39 @@ public class Scale
     /*
      * scaleFactor should be higher than 0
      */
-    public static int[] scale( int[] pixels, int width, int height, float scaleFactor )
+    public static PixelData scale( PixelData pixels, float scaleFactor )
     {
-        int newWidth = (int)( width * scaleFactor );
-        int newHeight = (int)( height * scaleFactor );
-        return getScaledImage( width, height, newWidth, newHeight, pixels );
+        int newWidth = (int)( pixels.getWidth() * scaleFactor );
+        int newHeight = (int)( pixels.getHeight() * scaleFactor );
+        return getScaledImage( pixels, newWidth, newHeight );
     }
 
-    public static int[] scale( int[] pixels, int width, int height, float scaleFactorX, float scaleFactorY )
+    public static PixelData scale( PixelData pixels, float scaleFactorX, float scaleFactorY )
     {
-        int newWidth = (int)( width * scaleFactorX );
-        int newHeight = (int)( height * scaleFactorY );
-        return getScaledImage( width, height, newWidth, newHeight, pixels );
+        int newWidth = (int)( pixels.getWidth() * scaleFactorX );
+        int newHeight = (int)( pixels.getHeight() * scaleFactorY );
+        return getScaledImage( pixels, newWidth, newHeight );
     }
 
-    private static int[] getScaledImage( int width, int height, int newWidth, int newHeight, int[] pixels )
+    private static PixelData getScaledImage( PixelData pixels, int newWidth, int newHeight )
     {
         int[] scaledPixels = new int[ newWidth * newHeight ];
+        int oldWidth = pixels.getWidth();
+        int oldHeight = pixels.getHeight();
 
         // set all pixels to -1 to indicate they still need to be calculated
         Arrays.fill( scaledPixels, -1 );
 
         // set all known pixel values from the original pixels array
-        float stepSizeX = (float)newWidth / (float)(width - 1);
-        float stepSizeY = (float)newHeight / (float)(height - 1);
-        for( int x = 0; x < width - 1; x++ )
+        float stepSizeX = (float)newWidth / (float)(oldWidth - 1);
+        float stepSizeY = (float)newHeight / (float)(oldHeight - 1);
+        for( int x = 0; x < oldWidth - 1; x++ )
         {
-            for( int y = 0; y < height - 1; y++ )
+            for( int y = 0; y < oldHeight - 1; y++ )
             {
                 int xPositionInScaledPixels = (int)( x * stepSizeX );
                 int yPositionInScaledPixels = (int)( y * stepSizeY );
-                int pixelValue = getPixel( pixels, width, x, y );
+                int pixelValue = pixels.getPixel( x, y );
                 scaledPixels[ xPositionInScaledPixels + yPositionInScaledPixels * newWidth ] = pixelValue;
             }
         }
@@ -56,10 +59,10 @@ public class Scale
                 {
                     int topLeftArrayPositionX = (int)( x / stepSizeX );
                     int topLeftArrayPositionY = (int)( y / stepSizeY );
-                    int topLeft = pixels[ TwinUtils.getPositionForPixel( topLeftArrayPositionX, topLeftArrayPositionY, width ) ];
-                    int topRight = pixels[ TwinUtils.getPositionForPixel( topLeftArrayPositionX + 1, topLeftArrayPositionY, width ) ];
-                    int bottomLeft = pixels[ TwinUtils.getPositionForPixel( topLeftArrayPositionX, topLeftArrayPositionY + 1, width ) ];
-                    int bottomRight = pixels[ TwinUtils.getPositionForPixel( topLeftArrayPositionX + 1, topLeftArrayPositionY + 1, width ) ];
+                    int topLeft = pixels.getPixel( topLeftArrayPositionX, topLeftArrayPositionY );
+                    int topRight = pixels.getPixel( topLeftArrayPositionX + 1, topLeftArrayPositionY );
+                    int bottomLeft = pixels.getPixel( topLeftArrayPositionX, topLeftArrayPositionY + 1 );
+                    int bottomRight = pixels.getPixel( topLeftArrayPositionX + 1, topLeftArrayPositionY + 1 );
 
                     int totalStepsX = (int)(( topLeftArrayPositionX + 1 ) * stepSizeX) - (int)( topLeftArrayPositionX * stepSizeX );
                     int totalStepsY = (int)(( topLeftArrayPositionY + 1 ) * stepSizeY) - (int)( topLeftArrayPositionY * stepSizeY );
@@ -71,7 +74,7 @@ public class Scale
                 }
             }
         }
-        return scaledPixels;
+        return new PixelData( scaledPixels, newWidth, newHeight );
     }
 
     private static int getBilinearInterpolatedColor( int topLeft, int topRight, int bottomLeft, int bottomRight, int totalStepsX, int totalStepsY, int stepsX, int stepsY )
@@ -86,11 +89,6 @@ public class Scale
         int bilinearInterpolatedBlue = (int) TwinUtils.bilinearInterpolate( colorTopLeft.getBlue(), colorTopRight.getBlue(), colorBottomLeft.getBlue(), colorBottomRight.getBlue(), totalStepsX, totalStepsY, stepsX, stepsY );
 
         return new Color( bilinearInterpolatedRed, bilinearInterpolatedGreen, bilinearInterpolatedBlue ).hashCode();
-    }
-
-    private static int getPixel( int[] pixels, int pixelsWidth, int x, int y )
-    {
-        return pixels[ x + y * pixelsWidth ];
     }
 
 }

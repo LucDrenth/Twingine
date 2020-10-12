@@ -6,49 +6,51 @@
 
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
+
 import java.awt.*;
 
 public class HSB
 {
     // shiftAmount should be a float between 0 and 1
-    public static int[] shiftHue( int[] pixels, float shiftAmount )
+    public static PixelData shiftHue( PixelData pixels, float shiftAmount )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
-            Color rgb = new Color( pixels[ i ] );
+            Color rgb = new Color( pixels.getPixel( i ) );
             float[] hsb = Color.RGBtoHSB( rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null );
             newPixels[ i ] = Color.HSBtoRGB( hsb[ 0 ] + shiftAmount, hsb[ 1 ], hsb[ 2 ] );
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
     // hue should be a float between 0 and 1
-    public static int[] setHue( int[] pixels, float hue )
+    public static PixelData setHue( PixelData pixels, float hue )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
-            Color rgb = new Color( pixels[ i ] );
+            Color rgb = new Color( pixels.getPixel( i ) );
             float[] hsb = Color.RGBtoHSB( rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null );
             newPixels[ i ] = Color.HSBtoRGB( hue, hsb[ 1 ], hsb[ 2 ] );
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
     // shiftAmount should be a float value between -1 and 1
-    public static int[] addSaturation( int[] pixels, float shiftAmount )
+    public static PixelData addSaturation( PixelData pixels, float shiftAmount )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
             // get HSB color values
-            Color rgb = new Color( pixels[ i ] );
+            Color rgb = new Color( pixels.getPixel( i ) );
             float[] hsb = Color.RGBtoHSB( rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null );
             float saturation = hsb[ 1 ];
 
@@ -63,33 +65,33 @@ public class HSB
             newPixels[ i ] = Color.HSBtoRGB( hsb[ 0 ], saturation, hsb[ 2 ] );
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
     // saturation should be a float between 0 and 1
-    public static int[] setSaturation( int[] pixels, float saturation )
+    public static PixelData setSaturation( PixelData pixels, float saturation )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
-            Color rgb = new Color( pixels[ i ] );
+            Color rgb = new Color( pixels.getPixel( i ) );
             float[] hsb = Color.RGBtoHSB( rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null );
             newPixels[ i ] = Color.HSBtoRGB( hsb[ 0 ], saturation, hsb[ 2 ] );
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
     // shiftAmount should be a float between -1 and 1
-    public static int[] addBrightness( int[] pixels, float shiftAmount )
+    public static PixelData addBrightness( PixelData pixels, float shiftAmount )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
             // get HSB color values
-            Color rgb = new Color( pixels[ i ] );
+            Color rgb = new Color( pixels.getPixel( i ) );
             float[] hsb = Color.RGBtoHSB( rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null );
             float brightness = hsb[ 2 ];
 
@@ -104,22 +106,22 @@ public class HSB
             newPixels[ i ] = Color.HSBtoRGB( hsb[ 0 ], hsb[ 1 ], brightness );
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
     // brightness should be a float between 0 and 1
-    public static int[] setBrightness( int[] pixels, float brightness )
+    public static PixelData setBrightness( PixelData pixels, float brightness )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
-            Color rgb = new Color( pixels[ i ] );
+            Color rgb = new Color( pixels.getPixel( i ) );
             float[] hsb = Color.RGBtoHSB( rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null );
             newPixels[ i ] = Color.HSBtoRGB( hsb[ 0 ], hsb[ 1 ], brightness );
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
 }

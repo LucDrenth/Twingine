@@ -1,17 +1,19 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
+
 import java.awt.*;
 
 public class Tint
 {
     // tintChange should be a value from -20 to 20
-    public static int[] change( int[] pixels, int tintChange )
+    public static PixelData change( PixelData pixels, int tintChange )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
-            Color color = new Color( pixels[ i ] );
+            Color color = new Color( pixels.getPixel( i ) );
 
             int newGreen = color.getGreen() + tintChange;
             if( newGreen > 255 ) newGreen = 255;
@@ -20,6 +22,6 @@ public class Tint
             newPixels[ i ] = new Color( color.getRed(), newGreen, color.getBlue() ).hashCode();
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 }

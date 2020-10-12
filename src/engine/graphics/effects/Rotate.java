@@ -1,77 +1,89 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
 import engine.twinUtils.TwinUtils;
 
 public class Rotate
 {
-    public static int[] rotate( int[] pixels, int width, int height, int degreesToRotate )
+    public static PixelData rotate( PixelData pixels, int degreesToRotate )
     {
+        // handle rotation below 0
+        if( degreesToRotate < 0 )
+        {
+            degreesToRotate *= -1;
+            degreesToRotate %= 360;
+            degreesToRotate = 360 - degreesToRotate;
+        }
+
+        if( degreesToRotate > 360 )
+            degreesToRotate %= 360;
+
         switch( degreesToRotate )
         {
             case 0:
                 return pixels;
             case 90:
-                return rotate90degrees( pixels, width, height );
+                return rotate90degrees( pixels );
             case 180:
-                return rotate180degrees( pixels, width, height );
+                return rotate180degrees( pixels );
             case 270:
-                return rotate270degrees( pixels, width, height );
+                return rotate270degrees( pixels );
             default:
-                return rotateUncleanAngle( pixels, width, height, degreesToRotate );
+                return rotateUncleanAngle( pixels, degreesToRotate );
         }
 
     }
 
-    private static int[] rotate90degrees( int[] pixels, int width, int height )
+    private static PixelData rotate90degrees( PixelData pixels )
     {
-        int[] newPixels = new int[ width * height ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int x = 0; x < width; x++ )
+        for( int x = 0; x < pixels.getWidth(); x++ )
         {
-            for( int y = 0; y < height; y++ )
+            for( int y = 0; y < pixels.getHeight(); y++ )
             {
-                newPixels[ (height - y - 1) + x * height ] = pixels[ x + y * width ];
+                newPixels[ (pixels.getHeight() - y - 1) + x * pixels.getHeight() ] = pixels.getPixel( x, y );
             }
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getHeight(), pixels.getWidth() );
     }
 
-    private static int[] rotate180degrees( int[] pixels, int width, int height )
+    private static PixelData rotate180degrees( PixelData pixels )
     {
-        int[] newPixels = new int[ width * height ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int x = 0; x < width; x++ )
+        for( int x = 0; x < pixels.getWidth(); x++ )
         {
-            for( int y = 0; y < height; y++ )
+            for( int y = 0; y < pixels.getHeight(); y++ )
             {
-                newPixels[ (width - x - 1) + (height - y - 1) * width ] = pixels[ x + y * width ];
+                newPixels[ (pixels.getWidth() - x - 1) + (pixels.getHeight() - y - 1) * pixels.getWidth() ] = pixels.getPixel( x, y );
             }
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 
-    private static int[] rotate270degrees( int[] pixels, int width, int height )
+    private static PixelData rotate270degrees( PixelData pixels )
     {
-        int[] newPixels = new int[ width * height ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int x = 0; x < width; x++ )
+        for( int x = 0; x < pixels.getWidth(); x++ )
         {
-            for( int y = 0; y < height; y++ )
+            for( int y = 0; y < pixels.getHeight(); y++ )
             {
-                newPixels[ y + (width - x - 1) * height ] = pixels[ x + y * width ];
+                newPixels[ y + (pixels.getWidth() - x - 1) * pixels.getHeight() ] = pixels.getPixel( x, y );
             }
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getHeight(), pixels.getWidth() );
     }
 
-    private static int[] rotateUncleanAngle( int[] pixels, int width, int height, int degreesToRotate )
+    private static PixelData rotateUncleanAngle( PixelData pixels, int degreesToRotate )
     {
         // calculate the new dimensions of the array after rotation
-        int newWidth = getWidthAfterRotation( width, height, degreesToRotate );
-        int newHeight = getHeightAfterRotation( width, height, degreesToRotate );
+        int newWidth = getWidthAfterRotation( pixels.getWidth(), pixels.getHeight(), degreesToRotate );
+        int newHeight = getHeightAfterRotation( pixels.getWidth(), pixels.getHeight(), degreesToRotate );
         int[] rotatedPixels = new int[ newWidth * newHeight ];
 
         // calculate cos and sin
@@ -81,13 +93,15 @@ public class Rotate
 
         // rotation goes around the top left corner. Calculate the lowestX and lowestY of the rotated pixels in order
         // adjust the offset of the pixels to put them in an array.
-        int lowestX = getLowestX( width, height, cos, sin );
-        int lowestY = getLowestY( width, height, cos, sin );
+        int lowestX = getLowestX( pixels.getWidth(), pixels.getHeight(), cos, sin );
+        int lowestY = getLowestY( pixels.getWidth(), pixels.getHeight(), cos, sin );
 
         // calculate values of pixels in the rotatedPixels array
-        fillPixels( rotatedPixels, pixels, width, getWidthAfterRotation( width, height, degreesToRotate ), degreesToRotate, lowestX, lowestY );
+        int widthAfterRotation = getWidthAfterRotation( pixels.getWidth(), pixels.getHeight(), degreesToRotate );
+        int heightAfterRotation = getHeightAfterRotation( pixels.getWidth(), pixels.getHeight(), degreesToRotate );
+        fillPixels( rotatedPixels, pixels, widthAfterRotation, degreesToRotate, lowestX, lowestY );
 
-        return rotatedPixels;
+        return new PixelData( rotatedPixels, widthAfterRotation, heightAfterRotation );
     }
 
     private static int getLowestX( int width, int height, double cos, double sin )
@@ -120,7 +134,7 @@ public class Rotate
         return TwinUtils.getMin( yCoordinatesAfterRotation );
     }
 
-    private static void fillPixels( int[] rotatedPixels, int[] originalPixels, int originalPixelsWidth, int newWidth, int degreesToRotate, int lowestX, int lowestY )
+    private static void fillPixels( int[] rotatedPixels, PixelData originalPixels, int newWidth, int degreesToRotate, int lowestX, int lowestY )
     {
         double rotationAsRadiant = Math.toRadians( degreesToRotate );
         double cos = Math.cos( rotationAsRadiant );
@@ -135,10 +149,10 @@ public class Rotate
 
                 int xAfterRotateBack = (int)( x * cos + y * sin );
                 int yAfterRotateBack = (int)( -x * sin + y * cos );
-                int originalPixelPosition = xAfterRotateBack + yAfterRotateBack * originalPixelsWidth;
+                int originalPixelPosition = xAfterRotateBack + yAfterRotateBack * originalPixels.getWidth();
 
-                if( TwinUtils.pixelExists( originalPixelsWidth, originalPixels.length / originalPixelsWidth, xAfterRotateBack, yAfterRotateBack ) )
-                    rotatedPixels[ i ] = originalPixels[ xAfterRotateBack + yAfterRotateBack * originalPixelsWidth ];
+                if( TwinUtils.pixelExists( originalPixels.getWidth(), originalPixels.getPixels().length / originalPixels.getWidth(), xAfterRotateBack, yAfterRotateBack ) )
+                    rotatedPixels[ i ] = originalPixels.getPixel( xAfterRotateBack, yAfterRotateBack );
             }
         }
     }

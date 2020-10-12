@@ -1,17 +1,19 @@
 package engine.graphics.effects;
 
+import engine.graphics.PixelData;
+
 import java.awt.*;
 
 public class Temperature
 {
     // temperatureChange should be a value from -50 to 50
-    public static int[] change( int[] pixels, int temperatureChange )
+    public static PixelData change( PixelData pixels, int temperatureChange )
     {
-        int[] newPixels = new int[ pixels.length ];
+        int[] newPixels = new int[ pixels.getPixels().length ];
 
-        for( int i = 0; i < pixels.length; i++ )
+        for( int i = 0; i < pixels.getPixels().length; i++ )
         {
-            Color color = new Color( pixels[ i ] );
+            Color color = new Color( pixels.getPixel( i ) );
 
             int newRed = color.getRed() + temperatureChange;
             if( newRed > 255 ) newRed = 255;
@@ -26,6 +28,6 @@ public class Temperature
             newPixels[ i ] = new Color( newRed, newGreen, newBlue ).hashCode();
         }
 
-        return newPixels;
+        return new PixelData( newPixels, pixels.getWidth(), pixels.getHeight() );
     }
 }

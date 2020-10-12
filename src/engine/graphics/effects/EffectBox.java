@@ -26,8 +26,6 @@ public class EffectBox
     private PixelData pixelData;
     private Point offset;
 
-    private int blur;
-
     public EffectBox( Renderer renderer, Window window, int width, int height )
     {
         this.renderer = renderer;
