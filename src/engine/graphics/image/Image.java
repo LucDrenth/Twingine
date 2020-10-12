@@ -19,6 +19,14 @@ public class Image
 
     private int alphaPercentage;
 
+    private boolean drawBetweenX;
+    private int drawFromX;
+    private int drawUntilX;
+
+    private boolean drawBetweenY;
+    private int drawFromY;
+    private int drawUntilY;
+
     public Image( String path )
     {
         this.path = path;
@@ -64,42 +72,18 @@ public class Image
 
     public void draw( Renderer renderer )
     {
-        renderer.draw( pixelData, offset );
-    }
-
-    // draw between 2 points and not outside them. First pixel draws at beginPointX and last pixel draws at endPointX
-    public void drawBetweenX( Renderer renderer, int beginPointX, int endPointX )
-    {
-        for( int i = 0; i < pixelData.getPixels().length; i++ )
+        for( int x = 0; x < pixelData.getWidth(); x++ )
         {
-            int x = i % getWidth() + offset.getX();
-            int y = i / getWidth() + offset.getY();
-            if( x >= beginPointX && x <= endPointX )
-                renderer.setPixel( x, y, pixelData.getPixel( i ), alphaPercentage );
-        }
-    }
-
-    // draw between 2 points and not outside them. First pixel draws at beginPointY and last pixel draws at endPointY
-    public void drawBetweenY( Renderer renderer, int beginPointY, int endPointY)
-    {
-        for( int i = 0; i < pixelData.getPixels().length; i++ )
-        {
-            int x = i % getWidth() + offset.getX();
-            int y = i / getWidth() + offset.getY();
-            if( y >= beginPointY && y <= endPointY )
-                renderer.setPixel( x, y, pixelData.getPixel( i ), alphaPercentage );
-        }
-    }
-
-    // draw between 4 points and not outside them. First pixel draws at beginPointX, beginPointY and last pixel draws at endPointX, endPointY
-    public void drawBetween( Renderer renderer, int beginPointX, int endPointX, int beginPointY, int endPointY )
-    {
-        for( int i = 0; i < pixelData.getPixels().length; i++ )
-        {
-            int x = i % getWidth() + offset.getX();
-            int y = i / getWidth() + offset.getY();
-            if( x >= beginPointX && x <= endPointX && y >= beginPointY && y <= endPointY )
-                renderer.setPixel( x, y, pixelData.getPixel( i ), alphaPercentage );
+            for( int y = 0; y < pixelData.getHeight(); y++ )
+            {
+                if( !drawBetweenX || ( offset.getX() + x >= drawFromX && offset.getX() + x <= drawUntilX ) )
+                {
+                    if( !drawBetweenY || ( offset.getY() + y >= drawFromY && offset.getY() + y <= drawUntilY ) )
+                    {
+                        renderer.setPixel( offset.getX() + x, offset.getY() + y, pixelData.getPixel( x, y ) );
+                    }
+                }
+            }
         }
     }
 
@@ -208,5 +192,27 @@ public class Image
     public PixelData getPixelData()
     {
         return pixelData;
+    }
+
+    public void setDrawBetweenX( boolean drawBetweenX )
+    {
+        this.drawBetweenX = drawBetweenX;
+    }
+
+    public void setDrawBetweenXPoints( int drawFromX, int drawUntilX )
+    {
+        this.drawFromX = drawFromX;
+        this.drawUntilX = drawUntilX;
+    }
+
+    public void setDrawBetweenY( boolean drawBetweenY )
+    {
+        this.drawBetweenY = drawBetweenY;
+    }
+
+    public void setDrawBetweenYPoints( int drawFromY, int drawUntilY )
+    {
+        this.drawFromY = drawFromY;
+        this.drawUntilY = drawUntilY;
     }
 }
