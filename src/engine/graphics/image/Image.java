@@ -19,8 +19,6 @@ public class Image
 
     private int alphaPercentage;
 
-    private boolean blurInbound; // false gives value to surrounding "0 value" pixels, true only sets original colored (non 0 value) pixels
-
     public Image( String path )
     {
         this.path = path;
@@ -62,7 +60,6 @@ public class Image
     {
         offset = new Point( 0, 0 );
         alphaPercentage = 100;
-        blurInbound = false;
     }
 
     public void draw( Renderer renderer )
@@ -201,11 +198,6 @@ public class Image
     public int getOffsetY()
     {
         return offset.getY();
-    }
-
-    public void setBlurInbound( boolean blurInbound )
-    {
-        this.blurInbound = blurInbound;
     }
 
     public void setPixelData( PixelData pixelData )
