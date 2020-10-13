@@ -6,7 +6,7 @@ import engine.twinUtils.Point;
 
 public class Circle
 {
-    private PixelData pixelsTheirAlphaValues; // alpha values in percentages
+    private PixelData pixels; // a grid of pixels with value 1 representing a pixel and value 0 representing no pixel
     private Point offset;
     private int radius;
     private int color;
@@ -16,7 +16,7 @@ public class Circle
         this.radius = radius;
         this.color = color;
         offset = new Point( 0, 0 );
-        pixelsTheirAlphaValues = generateCircle( radius );
+        pixels = generateCircle( radius );
     }
 
     private static PixelData generateCircle( int radius )
@@ -47,25 +47,25 @@ public class Circle
 
     private static void setPixelsEightWaySymmetrical( int radius, PixelData pixels, int x, int y )
     {
-        pixels.setPixel( x + radius, y + radius, 100 );
-        pixels.setPixel( x + radius, -y + radius, 100 );
-        pixels.setPixel( -x + radius, -y + radius, 100 );
-        pixels.setPixel( -x + radius, y + radius, 100 );
-        pixels.setPixel( y + radius, x + radius, 100 );
-        pixels.setPixel( y + radius, -x + radius, 100 );
-        pixels.setPixel( -y + radius, -x + radius, 100 );
-        pixels.setPixel( -y + radius, x + radius, 100 );
+        pixels.setPixel( x + radius, y + radius, 1 );
+        pixels.setPixel( x + radius, -y + radius, 1 );
+        pixels.setPixel( -x + radius, -y + radius, 1 );
+        pixels.setPixel( -x + radius, y + radius, 1 );
+        pixels.setPixel( y + radius, x + radius, 1 );
+        pixels.setPixel( y + radius, -x + radius, 1 );
+        pixels.setPixel( -y + radius, -x + radius, 1 );
+        pixels.setPixel( -y + radius, x + radius, 1 );
     }
 
     public void draw( Renderer renderer )
     {
-        for( int x = 0; x < pixelsTheirAlphaValues.getWidth(); x++ )
+        for( int x = 0; x < pixels.getWidth(); x++ )
         {
-            for( int y = 0; y < pixelsTheirAlphaValues.getHeight(); y++ )
+            for( int y = 0; y < pixels.getHeight(); y++ )
             {
-                if( pixelsTheirAlphaValues.getPixel( x, y ) > 0 )
+                if( pixels.getPixel( x, y ) == 1 )
                 {
-                    renderer.setPixel( x + offset.getX(), y + offset.getY(), color, pixelsTheirAlphaValues.getPixel( x, y ) );
+                    renderer.setPixel( x + offset.getX(), y + offset.getY(), color );
                 }
             }
         }
@@ -76,18 +76,19 @@ public class Circle
         offset.set( x, y );
     }
 
-    public PixelData getPixelsTheirAlphaValues()
+    public PixelData getPixels()
     {
-        return pixelsTheirAlphaValues;
-    }
-
-    public void setPixelsTheirAlphaValues( PixelData pixelsTheirAlphaValues )
-    {
-        this.pixelsTheirAlphaValues = pixelsTheirAlphaValues;
+        return pixels;
     }
 
     public int getRadius()
     {
         return radius;
+    }
+
+    public void setRadius( int radius )
+    {
+        this.radius = radius;
+        pixels = generateCircle( radius );
     }
 }

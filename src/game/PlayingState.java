@@ -31,7 +31,7 @@ public class PlayingState implements GameStateManager
     public void update()
     {
         updateCircleSize();
-        circle.setOffset( input.getMouseX() - circle.getPixelsTheirAlphaValues().getWidth() / 2, input.getMouseY() - circle.getPixelsTheirAlphaValues().getHeight() / 2 );
+        circle.setOffset( input.getMouseX() - circle.getPixels().getWidth() / 2, input.getMouseY() - circle.getPixels().getHeight() / 2 );
     }
 
     private void updateCircleSize()
