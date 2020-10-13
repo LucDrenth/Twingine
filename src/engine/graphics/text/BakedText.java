@@ -1,6 +1,6 @@
 package engine.graphics.text;
 
-import engine.graphics.PixelData;
+import engine.graphics.pixeldata.PixelData;
 import engine.graphics.Renderer;
 import engine.twinUtils.Point;
 

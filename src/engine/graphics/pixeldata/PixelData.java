@@ -1,4 +1,4 @@
-package engine.graphics;
+package engine.graphics.pixeldata;
 
 public class PixelData
 {

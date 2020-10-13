@@ -2,6 +2,7 @@ package engine.graphics;
 
 import engine.Engine;
 import engine.graphics.color.ColorPalette;
+import engine.graphics.pixeldata.PixelData;
 import engine.twinUtils.Point;
 
 import java.awt.image.DataBufferInt;

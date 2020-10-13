@@ -1,6 +1,6 @@
 package engine.graphics.effects;
 
-import engine.graphics.PixelData;
+import engine.graphics.pixeldata.PixelData;
 import engine.twinUtils.TwinUtils;
 
 import java.awt.*;
