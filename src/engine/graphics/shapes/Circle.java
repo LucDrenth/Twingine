@@ -57,6 +57,42 @@ public class Circle
         pixels.setPixel( -y + radius, x + radius, 1 );
     }
 
+    public void fill()
+    {
+        for( int y = 0; y < pixels.getHeight(); y++ )
+        {
+            int mostLeftPixelPosition = getMostLeftPixelPosition( y );
+            int mostRightPixelPosition = getMostRightPixelPosition( y );
+            if( mostLeftPixelPosition < mostRightPixelPosition )
+            {
+                for( int x = mostLeftPixelPosition + 1; x < mostRightPixelPosition; x++ )
+                {
+                    pixels.setPixel( x, y, 1 );
+                }
+            }
+        }
+    }
+
+    private int getMostLeftPixelPosition( int y )
+    {
+        for( int x = 0; x < pixels.getWidth(); x++ )
+        {
+            if( pixels.getPixel( x, y ) == 1 )
+                return x;
+        }
+        return 0;
+    }
+
+    private int getMostRightPixelPosition( int y )
+    {
+        for( int x = pixels.getWidth() - 1; x >= 0; x-- )
+        {
+            if( pixels.getPixel( x, y ) == 1 )
+                return x;
+        }
+        return 0;
+    }
+
     public void draw( Renderer renderer )
     {
         for( int x = 0; x < pixels.getWidth(); x++ )

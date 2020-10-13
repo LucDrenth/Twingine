@@ -40,12 +40,13 @@ public class PlayingState implements GameStateManager
         {
             radius--;
             if( radius <= 1 ) radius = 1;
-            circle = new Circle( radius, 0xff_f3c802 );
+            circle.setRadius( radius );
         }
         else if( input.isKey( VK_DOWN ) )
         {
             radius++;
-            circle = new Circle( radius, 0xff_f3c802 );
+            circle.setRadius( radius );
+            circle.fill();
         }
     }
 
