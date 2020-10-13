@@ -16,7 +16,6 @@ public class Circle
         this.radius = radius;
         this.color = color;
         offset = new Point( 0, 0 );
-        pixelsTheirAlphaValues = new PixelData( radius * 2, radius * 2 );
         pixelsTheirAlphaValues = generateCircle( radius );
     }
 
