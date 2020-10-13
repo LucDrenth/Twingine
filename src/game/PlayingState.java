@@ -3,6 +3,8 @@ package game;
 import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
+import engine.graphics.effects.Scale;
+import engine.graphics.image.Image;
 import engine.graphics.shapes.Circle;
 import engine.input.Input;
 
@@ -18,6 +20,8 @@ public class PlayingState implements GameStateManager
     private Circle circle;
     private int radius;
 
+    private Image image;
+
     public PlayingState( Engine engine )
     {
         this.engine = engine;
@@ -25,6 +29,11 @@ public class PlayingState implements GameStateManager
         input = engine.getInput();
         radius = 15;
         circle = new Circle( radius, 0xff_f3c802 );
+
+        image = new Image( "/test/tile.png" );
+        image.setPixelData( Scale.scale( image.getPixelData(), 3 ) );
+        image.setOffsets( engine.getWindow().getWidth() / 2 - image.getWidth() / 2, engine.getWindow().getHeight() / 2 - image.getHeight() / 2 );
+        image.roundCorners( image.getWidth() / 2 );
     }
 
     @Override
@@ -54,6 +63,7 @@ public class PlayingState implements GameStateManager
     public void draw()
     {
         circle.draw( renderer );
+        image.draw( renderer );
     }
 
 }

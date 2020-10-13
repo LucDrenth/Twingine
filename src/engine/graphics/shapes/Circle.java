@@ -19,6 +19,13 @@ public class Circle
         pixels = generateCircle( radius );
     }
 
+    public Circle( int radius )
+    {
+        this.radius = radius;
+        offset = new Point( 0, 0 );
+        pixels = generateCircle( radius );
+    }
+
     private static PixelData generateCircle( int radius )
     {
         PixelData pixels = new PixelData( radius * 2 + 1, radius * 2 + 1 );

@@ -1,5 +1,6 @@
 package engine.graphics.image;
 
+import engine.graphics.pixeldata.BooleanMask;
 import engine.graphics.pixeldata.PixelData;
 import engine.graphics.Renderer;
 import engine.twinUtils.Point;
@@ -26,6 +27,8 @@ public class Image
     private boolean drawBetweenY;
     private int drawFromY;
     private int drawUntilY;
+
+    private BooleanMask roundedCornersMask;
 
     public Image( String path )
     {
@@ -80,7 +83,17 @@ public class Image
                 {
                     if( !drawBetweenY || ( offset.getY() + y >= drawFromY && offset.getY() + y <= drawUntilY ) )
                     {
-                        renderer.setPixel( offset.getX() + x, offset.getY() + y, pixelData.getPixel( x, y ) );
+                        if( roundedCornersMask == null )
+                        {
+                            renderer.setPixel( offset.getX() + x, offset.getY() + y, pixelData.getPixel( x, y ) );
+                        }
+                        else
+                        {
+                            if( roundedCornersMask.get( x, y ) )
+                            {
+                                renderer.setPixel( offset.getX() + x, offset.getY() + y, pixelData.getPixel( x, y ) );
+                            }
+                        }
                     }
                 }
             }
@@ -127,6 +140,27 @@ public class Image
             loadPixelDataFromBufferedImage( bufferedImage );
 
         alphaPercentage = 100;
+    }
+
+    public void roundCorners( int radius )
+    {
+        if( roundedCornersMask == null )
+            roundedCornersMask = new BooleanMask( getWidth(), getHeight(), true );
+
+        roundedCornersMask.roundCorners( radius );
+    }
+
+    public void roundCorners( int radiusTopLeft, int radiusTopRight, int radiusBottomLeft, int radiusBottomRight )
+    {
+        if( roundedCornersMask == null )
+            roundedCornersMask = new BooleanMask( getWidth(), getHeight(), true );
+
+        roundedCornersMask.roundCorners( radiusTopLeft, radiusTopRight, radiusBottomLeft, radiusBottomRight );
+    }
+
+    public void removeRoundedCorners()
+    {
+        roundedCornersMask = null;
     }
 
     public void setOffsets( int x, int y )
