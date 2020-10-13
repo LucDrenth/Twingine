@@ -29,6 +29,7 @@ public class PlayingState implements GameStateManager
         input = engine.getInput();
         radius = 15;
         circle = new Circle( radius, 0xff_f3c802 );
+        circle.setPixels( Scale.scale( circle.getPixels(), 10 ) );
 
         image = new Image( "/test/tile.png" );
         image.setPixelData( Scale.scale( image.getPixelData(), 3 ) );
@@ -45,17 +46,20 @@ public class PlayingState implements GameStateManager
 
     private void updateCircleSize()
     {
-        if( input.isKey( VK_UP ) )
+        if( input.isKeyDown( VK_UP ) )
         {
             radius--;
             if( radius <= 1 ) radius = 1;
-            circle.setRadius( radius );
+            circle.setDiameter( radius * 2 - 1 );
+            circle.setPixels( Scale.scale( circle.getPixels(), 10 ) );
+            System.out.println( radius );
         }
-        else if( input.isKey( VK_DOWN ) )
+        else if( input.isKeyDown( VK_DOWN ) )
         {
             radius++;
             circle.setRadius( radius );
-            circle.fill();
+            circle.setPixels( Scale.scale( circle.getPixels(), 10 ) );
+            System.out.println( radius + " / " + circle.getDiameter() );
         }
     }
 

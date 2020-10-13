@@ -1,5 +1,6 @@
 package engine.graphics.shapes;
 
+import engine.graphics.color.ColorPalette;
 import engine.graphics.pixeldata.PixelData;
 import engine.graphics.Renderer;
 import engine.twinUtils.Point;
@@ -8,13 +9,16 @@ public class Circle
 {
     private PixelData pixels; // a grid of pixels with value 1 representing a pixel and value 0 representing no pixel
     private Point offset;
+
     private int radius;
+    private int diameter;
     private int color;
 
     public Circle( int radius, int color )
     {
         this.radius = radius;
         this.color = color;
+        calculateDiameter();
         offset = new Point( 0, 0 );
         pixels = generateCircle( radius );
     }
@@ -22,13 +26,20 @@ public class Circle
     public Circle( int radius )
     {
         this.radius = radius;
+        calculateDiameter();
         offset = new Point( 0, 0 );
         pixels = generateCircle( radius );
     }
 
+    private void calculateDiameter()
+    {
+        diameter = radius * 2 - 1;
+    }
+
     private static PixelData generateCircle( int radius )
     {
-        PixelData pixels = new PixelData( radius * 2 + 1, radius * 2 + 1 );
+        int diameter = calculateDiameter( radius );
+        PixelData pixels = new PixelData( diameter, diameter );
 
         int x = 0;
         int y = radius - 1;
@@ -52,16 +63,21 @@ public class Circle
         return pixels;
     }
 
+    private static int calculateDiameter( int radius )
+    {
+        return radius * 2 - 1;
+    }
+
     private static void setPixelsEightWaySymmetrical( int radius, PixelData pixels, int x, int y )
     {
-        pixels.setPixel( x + radius, y + radius, 1 );
-        pixels.setPixel( x + radius, -y + radius, 1 );
-        pixels.setPixel( -x + radius, -y + radius, 1 );
-        pixels.setPixel( -x + radius, y + radius, 1 );
-        pixels.setPixel( y + radius, x + radius, 1 );
-        pixels.setPixel( y + radius, -x + radius, 1 );
-        pixels.setPixel( -y + radius, -x + radius, 1 );
-        pixels.setPixel( -y + radius, x + radius, 1 );
+        pixels.setPixel( x + radius - 1, y + radius - 1, 1 );
+        pixels.setPixel( x + radius - 1, -y + radius - 1, 1 );
+        pixels.setPixel( -x + radius - 1, -y + radius - 1, 1 );
+        pixels.setPixel( -x + radius - 1, y + radius - 1, 1 );
+        pixels.setPixel( y + radius - 1, x + radius - 1, 1 );
+        pixels.setPixel( y + radius - 1, -x + radius - 1, 1 );
+        pixels.setPixel( -y + radius - 1, -x + radius - 1, 1 );
+        pixels.setPixel( -y + radius - 1, x + radius - 1, 1 );
     }
 
     public void fill()
@@ -110,6 +126,10 @@ public class Circle
                 {
                     renderer.setPixel( x + offset.getX(), y + offset.getY(), color );
                 }
+                else
+                {
+                    renderer.setPixel( x + offset.getX(), y + offset.getY(), ColorPalette.getWhite() );
+                }
             }
         }
     }
@@ -124,6 +144,11 @@ public class Circle
         return pixels;
     }
 
+    public void setPixels( PixelData pixels )
+    {
+        this.pixels = pixels;
+    }
+
     public int getRadius()
     {
         return radius;
@@ -133,6 +158,20 @@ public class Circle
     {
         this.radius = radius;
         pixels = generateCircle( radius );
+        calculateDiameter();
+    }
+
+    public int getDiameter()
+    {
+        return diameter;
+    }
+
+    public void setDiameter( int diameter )
+    {
+        this.diameter = diameter;
+        radius = ( diameter + 1 ) / 2;
+        pixels = generateCircle( radius );
+
     }
 
     public int getColor()
