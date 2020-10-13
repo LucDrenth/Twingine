@@ -127,4 +127,14 @@ public class Circle
         this.radius = radius;
         pixels = generateCircle( radius );
     }
+
+    public int getColor()
+    {
+        return color;
+    }
+
+    public void setColor( int color )
+    {
+        this.color = color;
+    }
 }
