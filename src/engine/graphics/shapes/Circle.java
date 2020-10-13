@@ -1,8 +1,7 @@
 package engine.graphics.shapes;
 
-import engine.graphics.color.ColorPalette;
-import engine.graphics.pixeldata.PixelData;
 import engine.graphics.Renderer;
+import engine.graphics.pixeldata.PixelData;
 import engine.twinUtils.Point;
 
 public class Circle
@@ -123,13 +122,7 @@ public class Circle
             for( int y = 0; y < pixels.getHeight(); y++ )
             {
                 if( pixels.getPixel( x, y ) == 1 )
-                {
                     renderer.setPixel( x + offset.getX(), y + offset.getY(), color );
-                }
-                else
-                {
-                    renderer.setPixel( x + offset.getX(), y + offset.getY(), ColorPalette.getWhite() );
-                }
             }
         }
     }
