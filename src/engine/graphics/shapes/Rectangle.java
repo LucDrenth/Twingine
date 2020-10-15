@@ -1,53 +1,66 @@
 package engine.graphics.shapes;
 
 import engine.graphics.Renderer;
+import engine.graphics.pixeldata.BooleanMask;
+import engine.graphics.pixeldata.PixelData;
+import engine.twinUtils.Point;
 
 public class Rectangle
 {
-    private int[][] pixels;
+    private PixelData pixelData;
+    private Point offset;
+    private BooleanMask roundedCornersMask;
 
     private int color;
     private int alphaPercentage;
 
-    private int width;
-    private int height;
-    private int offsetX;
-    private int offsetY;
-
     public Rectangle( int width, int height, int color )
     {
-        this.width = width;
-        this.height = height;
+        pixelData = new PixelData( width, height );
         this.color = color;
+        pixelData.fill( color );
 
+        offset = new Point( 0, 0 );
         alphaPercentage = 100;
-        pixels = new int[width][height];
-
-        for( int x = 0; x < pixels.length; x++ )
-        {
-            for( int y = 0; y < pixels[0].length; y++ )
-            {
-                pixels[x][y] = color;
-            }
-        }
     }
 
     public void draw( Renderer renderer )
     {
 
-        for( int x = 0; x < pixels.length; x++ )
+        for( int x = 0; x < pixelData.getWidth(); x++ )
         {
-            for( int y = 0; y < pixels[0].length; y++ )
+            for( int y = 0; y < pixelData.getHeight(); y++ )
             {
-                renderer.setPixel( x + offsetX, y + offsetY, color, alphaPercentage );
+                if( roundedCornersMask == null )
+                    renderer.setPixel( x + offset.getX(), y + offset.getY(), color, alphaPercentage );
+                else
+                {
+                    if( roundedCornersMask.get( x, y ) )
+                        renderer.setPixel( x + offset.getX(), y + offset.getY(), color, alphaPercentage );
+                }
             }
         }
     }
 
     public void setOffsets( int x, int y )
     {
-        this.offsetX = x;
-        this.offsetY = y;
+        offset.set( x, y );
+    }
+
+    public void roundCorners( int radius )
+    {
+        if( roundedCornersMask == null )
+            roundedCornersMask = new BooleanMask( getWidth(), getHeight(), true );
+
+        roundedCornersMask.roundCorners( radius );
+    }
+
+    public void roundCorners( int radiusTopLeft, int radiusTopRight, int radiusBottomLeft, int radiusBottomRight )
+    {
+        if( roundedCornersMask == null )
+            roundedCornersMask = new BooleanMask( getWidth(), getHeight(), true );
+
+        roundedCornersMask.roundCorners( radiusTopLeft, radiusTopRight, radiusBottomLeft, radiusBottomRight );
     }
 
     public int getColor()
@@ -62,22 +75,22 @@ public class Rectangle
 
     public int getOffsetX()
     {
-        return offsetX;
+        return offset.getX();
     }
 
     public int getOffsetY()
     {
-        return offsetY;
+        return offset.getY();
     }
 
     public int getWidth()
     {
-        return width;
+        return pixelData.getWidth();
     }
 
     public int getHeight()
     {
-        return height;
+        return pixelData.getHeight();
     }
 
     public int getAlphaPercentage()

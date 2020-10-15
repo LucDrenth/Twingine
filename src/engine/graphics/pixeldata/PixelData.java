@@ -1,5 +1,7 @@
 package engine.graphics.pixeldata;
 
+import java.util.Arrays;
+
 public class PixelData
 {
     private int[] pixels;
@@ -48,6 +50,11 @@ public class PixelData
     public void setPixel( int arrayIndex, int value )
     {
         pixels[ arrayIndex ] = value;
+    }
+
+    public void fill( int value )
+    {
+        Arrays.fill( pixels, value );
     }
 
     public int getWidth()
