@@ -7,7 +7,7 @@ public class Line
 {
     public static void draw( Coordinate start, Coordinate end, int color, Renderer renderer )
     {
-        int decidor = 0;
+        int decider = 0;
 
         int dx = Math.abs( end.getX() - start.getX() );
         int dy = Math.abs( end.getY() - start.getY() );
@@ -32,12 +32,12 @@ public class Line
                     break;
 
                 x += incrementDirectionX;
-                decidor += dy2;
+                decider += dy2;
 
-                if( decidor > dx )
+                if( decider > dx )
                 {
                     y += incrementDirectionY;
-                    decidor -= dx2;
+                    decider -= dx2;
                 }
             }
         }
@@ -51,14 +51,23 @@ public class Line
                     break;
 
                 y += incrementDirectionY;
-                decidor += dx2;
+                decider += dx2;
 
-                if( decidor > dy )
+                if( decider > dy )
                 {
                     x += incrementDirectionX;
-                    decidor -= dy2;
+                    decider -= dy2;
                 }
             }
         }
+    }
+
+    public static void draw( Coordinate start, int lineLength, int angle, int color, Renderer renderer )
+    {
+        int endX = start.getX() + (int)( lineLength * Math.cos(Math.toRadians( angle - 90 ) ) );
+        int endY = start.getY() + (int)( lineLength * Math.sin(Math.toRadians( angle - 90 ) ) );
+        Coordinate end = new Coordinate( endX, endY );
+
+        draw( start, end, color, renderer );
     }
 }

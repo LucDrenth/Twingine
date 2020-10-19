@@ -1,7 +1,7 @@
 package engine.graphics.text;
 
 import engine.graphics.Renderer;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 import engine.twinUtils.StringUtils;
 
 public class Text
@@ -11,7 +11,7 @@ public class Text
     private String string;
     private String[] words;
 
-    private Point offset;
+    private Coordinate offset;
 
     private int color;
     private int alphaPercentage;
@@ -42,7 +42,7 @@ public class Text
         this.color = color;
         alphaPercentage = 100;
 
-        offset = new Point( 0, 0 );
+        offset = new Coordinate( 0, 0 );
 
         spaceBetweenLetters = 0;
         spaceBetweenWords = font.getCharacterWidths()[ ' ' ];
@@ -71,7 +71,7 @@ public class Text
 
     public void draw( Renderer renderer )
     {
-        Point characterOffset = new Point( offset );
+        Coordinate characterOffset = new Coordinate( offset );
 
         int lettersShown = 0; // keeps track of how many letters are already shown
 
@@ -88,7 +88,7 @@ public class Text
         }
     }
 
-    private void drawLetter( Renderer renderer, int unicode, Point offset )
+    private void drawLetter( Renderer renderer, int unicode, Coordinate offset )
     {
         for( int x = 0; x < font.getCharacterWidths()[ unicode ]; x++ )
         {
@@ -112,7 +112,7 @@ public class Text
         }
     }
 
-    private void drawWord( int wordIndex, int lettersShown, Renderer renderer, Point characterOffset )
+    private void drawWord( int wordIndex, int lettersShown, Renderer renderer, Coordinate characterOffset )
     {
         for( int characterIndex = 0; characterIndex < words[ wordIndex ].length(); characterIndex++ )
         {
@@ -135,7 +135,7 @@ public class Text
         }
     }
 
-    private boolean wordShouldGoOnNextLine( int wordIndex, Point characterOffset )
+    private boolean wordShouldGoOnNextLine( int wordIndex, Coordinate characterOffset )
     {
         return isParagraph &&
                wordIndex < words.length - 1 && // is not the last word
