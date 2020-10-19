@@ -73,8 +73,7 @@ public class Coordinate
     {
         int newX = x + (int)( amountToMove * Math.cos( Math.toRadians( angle - 90 ) ) );
         int newY = y + (int)( amountToMove * Math.sin( Math.toRadians( angle - 90 ) ) );
-        Coordinate end = new Coordinate( newX, newY );
-        set( end );
+        set( newX, newY );
     }
 
     public void set( Coordinate coordinate )
