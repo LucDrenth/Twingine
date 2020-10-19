@@ -3,8 +3,10 @@ package game;
 import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
-import engine.graphics.shapes.Rectangle;
+import engine.graphics.color.ColorPalette;
+import engine.graphics.shapes.Line;
 import engine.input.Input;
+import engine.twinUtils.Point;
 
 public class PlayingState implements GameStateManager
 {
@@ -12,7 +14,8 @@ public class PlayingState implements GameStateManager
     private Input input;
     private Renderer renderer;
 
-    private Rectangle rectangle;
+    private Point start;
+    private Point end;
 
     public PlayingState( Engine engine )
     {
@@ -20,20 +23,20 @@ public class PlayingState implements GameStateManager
         renderer = engine.getRenderer();
         input = engine.getInput();
 
-        rectangle = new Rectangle( 200, 100, 0xff_f3c802 );
-        rectangle.roundCorners( rectangle.getHeight() / 2 );
+        start = new Point( engine.getWindow().getWidth() / 2, engine.getWindow().getHeight() / 2 );
+        end = new Point( 0, 0 );
     }
 
     @Override
     public void update()
     {
-        rectangle.setOffsets( input.getMouseX() - rectangle.getWidth() / 2, input.getMouseY() - rectangle.getHeight() / 2 );
+        end = new Point( input.getMouseX(), input.getMouseY() );
     }
 
     @Override
     public void draw()
     {
-        rectangle.draw( renderer );
+        Line.draw( start, end, ColorPalette.getWhite(), renderer );
     }
 
 }
