@@ -3,7 +3,7 @@ package engine.graphics;
 import engine.Engine;
 import engine.graphics.color.ColorPalette;
 import engine.graphics.pixeldata.PixelData;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
@@ -55,13 +55,13 @@ public class Renderer
         }
     }
 
-    public void draw( PixelData pixelData, Point point )
+    public void draw( PixelData pixelData, Coordinate coordinate )
     {
         for( int x = 0; x < pixelData.getWidth(); x++ )
         {
             for( int y = 0; y < pixelData.getHeight(); y++ )
             {
-                setPixel( point.getX() + x, point.getY() + y, pixelData.getPixel( x, y ) );
+                setPixel( coordinate.getX() + x, coordinate.getY() + y, pixelData.getPixel( x, y ) );
             }
         }
     }

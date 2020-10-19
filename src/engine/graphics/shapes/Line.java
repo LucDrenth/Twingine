@@ -1,11 +1,11 @@
 package engine.graphics.shapes;
 
 import engine.graphics.Renderer;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 
 public class Line
 {
-    public static void draw( Point start, Point end, int color, Renderer renderer )
+    public static void draw( Coordinate start, Coordinate end, int color, Renderer renderer )
     {
         int decidor = 0;
 

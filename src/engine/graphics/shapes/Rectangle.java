@@ -3,12 +3,12 @@ package engine.graphics.shapes;
 import engine.graphics.Renderer;
 import engine.graphics.pixeldata.BooleanMask;
 import engine.graphics.pixeldata.PixelData;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 
 public class Rectangle
 {
     private PixelData pixelData;
-    private Point offset;
+    private Coordinate offset;
     private BooleanMask roundedCornersMask;
 
     private int color;
@@ -20,7 +20,7 @@ public class Rectangle
         this.color = color;
         pixelData.fill( color );
 
-        offset = new Point( 0, 0 );
+        offset = new Coordinate( 0, 0 );
         alphaPercentage = 100;
     }
 

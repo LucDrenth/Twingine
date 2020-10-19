@@ -2,7 +2,7 @@ package engine.graphics.shapes;
 
 import engine.graphics.Renderer;
 import engine.graphics.pixeldata.PixelData;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 
 public class Circle
 {
@@ -10,7 +10,7 @@ public class Circle
     // of a boolean array so it can be easily used by the effects such as scale, blur etc.
     private PixelData pixels;
 
-    private Point offset;
+    private Coordinate offset;
 
     private int radius;
     private int diameter;
@@ -21,7 +21,7 @@ public class Circle
         this.radius = radius;
         this.color = color;
         calculateDiameter();
-        offset = new Point( 0, 0 );
+        offset = new Coordinate( 0, 0 );
         pixels = generateCircle( radius );
     }
 
@@ -29,7 +29,7 @@ public class Circle
     {
         this.radius = radius;
         calculateDiameter();
-        offset = new Point( 0, 0 );
+        offset = new Coordinate( 0, 0 );
         pixels = generateCircle( radius );
     }
 
@@ -180,7 +180,7 @@ public class Circle
         this.color = color;
     }
 
-    public static void draw( int radius, int color, Point offset, Renderer renderer )
+    public static void draw( int radius, int color, Coordinate offset, Renderer renderer )
     {
         int x = 0;
         int y = radius - 1;
@@ -202,7 +202,7 @@ public class Circle
         }
     }
 
-    private static void drawPixelsEightWaySymmetrical( int radius, int x, int y, int color, Point offset, Renderer renderer )
+    private static void drawPixelsEightWaySymmetrical( int radius, int x, int y, int color, Coordinate offset, Renderer renderer )
     {
         renderer.setPixel( x + radius - 1 + offset.getX(), y + radius - 1 + offset.getY(), color );
         renderer.setPixel( x + radius - 1 + offset.getX(), -y + radius - 1 + offset.getY(), color );

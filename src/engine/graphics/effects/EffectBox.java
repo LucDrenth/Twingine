@@ -3,7 +3,7 @@ package engine.graphics.effects;
 import engine.graphics.pixeldata.PixelData;
 import engine.graphics.Renderer;
 import engine.graphics.Window;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 import engine.twinUtils.TwinUtils;
 
 /*
@@ -24,7 +24,7 @@ public class EffectBox
     private Window window;
 
     private PixelData pixelData;
-    private Point offset;
+    private Coordinate offset;
 
     public EffectBox( Renderer renderer, Window window, int width, int height )
     {
@@ -32,7 +32,7 @@ public class EffectBox
         this.window = window;
 
         pixelData = new PixelData( width, height );
-        offset = new Point( 0, 0 );
+        offset = new Coordinate( 0, 0 );
     }
 
     public void reset()

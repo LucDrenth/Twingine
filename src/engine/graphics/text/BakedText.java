@@ -2,19 +2,19 @@ package engine.graphics.text;
 
 import engine.graphics.pixeldata.PixelData;
 import engine.graphics.Renderer;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 
 import java.awt.*;
 
 public class BakedText
 {
     private PixelData pixelData;
-    private Point offset;
+    private Coordinate offset;
 
     public BakedText( Text text )
     {
         pixelData = bake( text );
-        offset = new Point( 0, 0 );
+        offset = new Coordinate( 0, 0 );
     }
 
     public void draw( Renderer renderer )
@@ -28,7 +28,7 @@ public class BakedText
         int height = calculateBakedHeight( text );
         PixelData pixelData = new PixelData( width, height );
 
-        Point characterOffset = new Point( 0, 0 );
+        Coordinate characterOffset = new Coordinate( 0, 0 );
 
         // loop trough all word
         for( int wordIndex = 0; wordIndex < text.getWords().length; wordIndex++ )
@@ -39,7 +39,7 @@ public class BakedText
         return pixelData;
     }
 
-    private static void bakeWord( Text text, int wordIndex, Point characterOffset, PixelData pixelData )
+    private static void bakeWord( Text text, int wordIndex, Coordinate characterOffset, PixelData pixelData )
     {
         for( int characterIndex = 0; characterIndex < text.getWords()[ wordIndex ].length(); characterIndex++ )
         {
@@ -57,7 +57,7 @@ public class BakedText
         }
     }
 
-    private static void bakeLetter( Text text, int unicode, PixelData pixelData, Point characterOffset )
+    private static void bakeLetter( Text text, int unicode, PixelData pixelData, Coordinate characterOffset )
     {
         for( int x = 0; x < text.getFont().getCharacterWidths()[ unicode ]; x++ )
         {
@@ -77,7 +77,7 @@ public class BakedText
         }
     }
 
-    private static boolean wordShouldWrapAround( Text text, int wordIndex, Point characterOffset )
+    private static boolean wordShouldWrapAround( Text text, int wordIndex, Coordinate characterOffset )
     {
         return text.isParagraph() &&
                wordIndex < text.getWords().length - 1 && // is not the last word
@@ -146,7 +146,7 @@ public class BakedText
         return pixelData;
     }
 
-    public Point getOffset()
+    public Coordinate getOffset()
     {
         return offset;
     }

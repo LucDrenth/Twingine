@@ -3,7 +3,7 @@ package engine.graphics.image;
 import engine.graphics.pixeldata.BooleanMask;
 import engine.graphics.pixeldata.PixelData;
 import engine.graphics.Renderer;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,7 +16,7 @@ public class Image
     private BufferedImage bufferedImage;
 
     private PixelData pixelData;
-    private Point offset;
+    private Coordinate offset;
 
     private int alphaPercentage;
 
@@ -69,7 +69,7 @@ public class Image
 
     private void initVariables()
     {
-        offset = new Point( 0, 0 );
+        offset = new Coordinate( 0, 0 );
         alphaPercentage = 100;
     }
 

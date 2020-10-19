@@ -7,7 +7,7 @@ import engine.graphics.color.ColorPalette;
 import engine.graphics.shapes.Circle;
 import engine.graphics.shapes.Line;
 import engine.input.Input;
-import engine.twinUtils.Point;
+import engine.twinUtils.Coordinate;
 
 public class PlayingState implements GameStateManager
 {
@@ -15,8 +15,8 @@ public class PlayingState implements GameStateManager
     private Input input;
     private Renderer renderer;
 
-    private Point start;
-    private Point end;
+    private Coordinate start;
+    private Coordinate end;
 
     public PlayingState( Engine engine )
     {
@@ -24,14 +24,14 @@ public class PlayingState implements GameStateManager
         renderer = engine.getRenderer();
         input = engine.getInput();
 
-        start = new Point( engine.getWindow().getWidth() / 2, engine.getWindow().getHeight() / 2 );
-        end = new Point( 0, 0 );
+        start = new Coordinate( engine.getWindow().getWidth() / 2, engine.getWindow().getHeight() / 2 );
+        end = new Coordinate( 0, 0 );
     }
 
     @Override
     public void update()
     {
-        end = new Point( input.getMouseX(), input.getMouseY() );
+        end = new Coordinate( input.getMouseX(), input.getMouseY() );
     }
 
     @Override
@@ -39,7 +39,7 @@ public class PlayingState implements GameStateManager
     {
         Line.draw( start, end, ColorPalette.getWhite(), renderer );
         if( input.getMouseX() > 0 )
-            Circle.draw( input.getMouseX(), 0xff_f3c802, new Point( 10, 10 ), renderer );
+            Circle.draw( input.getMouseX(), 0xff_f3c802, new Coordinate( 10, 10 ), renderer );
     }
 
 }

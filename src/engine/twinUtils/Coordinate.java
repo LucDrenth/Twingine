@@ -1,20 +1,20 @@
 package engine.twinUtils;
 
-public class Point
+public class Coordinate
 {
     private int x;
     private int y;
 
-    public Point( int x, int y )
+    public Coordinate( int x, int y )
     {
         this.x = x;
         this.y = y;
     }
 
-    public Point( Point point )
+    public Coordinate( Coordinate coordinate )
     {
-        this.x = point.getX();
-        this.y = point.getY();
+        this.x = coordinate.getX();
+        this.y = coordinate.getY();
     }
 
     public int getX()
@@ -57,22 +57,22 @@ public class Point
         y -= subtractAmount;
     }
 
-    public void add( Point point )
+    public void add( Coordinate coordinate )
     {
-        x += point.getX();
-        y += point.getY();
+        x += coordinate.getX();
+        y += coordinate.getY();
     }
 
-    public void subtract( Point point )
+    public void subtract( Coordinate coordinate )
     {
-        x -= point.getX();
-        y -= point.getY();
+        x -= coordinate.getX();
+        y -= coordinate.getY();
     }
 
-    public void set( Point point )
+    public void set( Coordinate coordinate )
     {
-        x = point.getX();
-        y = point.getY();
+        x = coordinate.getX();
+        y = coordinate.getY();
     }
 
     public void set( int x, int y )
