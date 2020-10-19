@@ -69,6 +69,14 @@ public class Coordinate
         y -= coordinate.getY();
     }
 
+    public void moveByAngle( int angle, int amountToMove )
+    {
+        int newX = x + (int)( amountToMove * Math.cos( Math.toRadians( angle - 90 ) ) );
+        int newY = y + (int)( amountToMove * Math.sin( Math.toRadians( angle - 90 ) ) );
+        Coordinate end = new Coordinate( newX, newY );
+        set( end );
+    }
+
     public void set( Coordinate coordinate )
     {
         x = coordinate.getX();

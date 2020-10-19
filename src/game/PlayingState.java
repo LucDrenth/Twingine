@@ -13,6 +13,8 @@ public class PlayingState implements GameStateManager
     private Input input;
     private Renderer renderer;
 
+    private int angle;
+
     public PlayingState( Engine engine )
     {
         this.engine = engine;
@@ -24,13 +26,13 @@ public class PlayingState implements GameStateManager
     @Override
     public void update()
     {
-
+        angle += 2;
     }
 
     @Override
     public void draw()
     {
-        Line.draw( new Coordinate( engine.getWindow().getWidth() / 2, engine.getWindow().getHeight() / 2 ), 100, input.getMouseX(), 0xff_f3c802, renderer );
+        Line.draw( new Coordinate( engine.getWindow().getWidth() / 2, engine.getWindow().getHeight() / 2 ), 100, angle, 0xff_f3c802, renderer );
     }
 
 }

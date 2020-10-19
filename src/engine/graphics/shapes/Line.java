@@ -64,9 +64,8 @@ public class Line
 
     public static void draw( Coordinate start, int lineLength, int angle, int color, Renderer renderer )
     {
-        int endX = start.getX() + (int)( lineLength * Math.cos(Math.toRadians( angle - 90 ) ) );
-        int endY = start.getY() + (int)( lineLength * Math.sin(Math.toRadians( angle - 90 ) ) );
-        Coordinate end = new Coordinate( endX, endY );
+        Coordinate end = new Coordinate( start );
+        end.moveByAngle( angle, lineLength );
 
         draw( start, end, color, renderer );
     }
