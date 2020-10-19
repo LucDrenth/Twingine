@@ -4,6 +4,7 @@ import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
 import engine.graphics.color.ColorPalette;
+import engine.graphics.shapes.Circle;
 import engine.graphics.shapes.Line;
 import engine.input.Input;
 import engine.twinUtils.Point;
@@ -37,6 +38,8 @@ public class PlayingState implements GameStateManager
     public void draw()
     {
         Line.draw( start, end, ColorPalette.getWhite(), renderer );
+        if( input.getMouseX() > 0 )
+            Circle.draw( input.getMouseX(), 0xff_f3c802, new Point( 10, 10 ), renderer );
     }
 
 }

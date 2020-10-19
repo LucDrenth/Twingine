@@ -6,7 +6,10 @@ import engine.twinUtils.Point;
 
 public class Circle
 {
-    private PixelData pixels; // a grid of pixels with value 1 representing a pixel and value 0 representing no pixel
+    // a grid of pixels with value 1 representing a pixel and value 0 representing no pixel. PixelData is used instead
+    // of a boolean array so it can be easily used by the effects such as scale, blur etc.
+    private PixelData pixels;
+
     private Point offset;
 
     private int radius;
@@ -176,4 +179,39 @@ public class Circle
     {
         this.color = color;
     }
+
+    public static void draw( int radius, int color, Point offset, Renderer renderer )
+    {
+        int x = 0;
+        int y = radius - 1;
+        int decisionPoint = 3 - ( 2 * radius );
+        drawPixelsEightWaySymmetrical( radius, x, y, color, offset, renderer ); // draw initial points
+
+        while( x <= y - 1 )
+        {
+            if( decisionPoint <= 0 ) // if goes on same line
+                decisionPoint += 4 * x + 6;
+            else // goes on next line
+            {
+                decisionPoint += 4 * x - 4 * y + 10;
+                y--;
+            }
+
+            x++;
+            drawPixelsEightWaySymmetrical( radius, x, y, color, offset, renderer );
+        }
+    }
+
+    private static void drawPixelsEightWaySymmetrical( int radius, int x, int y, int color, Point offset, Renderer renderer )
+    {
+        renderer.setPixel( x + radius - 1 + offset.getX(), y + radius - 1 + offset.getY(), color );
+        renderer.setPixel( x + radius - 1 + offset.getX(), -y + radius - 1 + offset.getY(), color );
+        renderer.setPixel( -x + radius - 1 + offset.getX(), -y + radius - 1 + offset.getY(), color );
+        renderer.setPixel( -x + radius - 1 + offset.getX(), y + radius - 1 + offset.getY(), color );
+        renderer.setPixel( y + radius - 1 + offset.getX(), x + radius - 1 + offset.getY(), color );
+        renderer.setPixel( y + radius - 1 + offset.getX(), -x + radius - 1 + offset.getY(), color );
+        renderer.setPixel( -y + radius - 1 + offset.getX(), -x + radius - 1 + offset.getY(), color );
+        renderer.setPixel( -y + radius - 1 + offset.getX(), x + radius - 1 + offset.getY(), color );
+    }
+
 }
