@@ -3,8 +3,7 @@ package game;
 import engine.Engine;
 import engine.gameState.GameStateManager;
 import engine.graphics.Renderer;
-import engine.graphics.color.ColorPalette;
-import engine.graphics.shapes.Star;
+import engine.graphics.shapes.Line;
 import engine.input.Input;
 import engine.twinUtils.Coordinate;
 
@@ -17,6 +16,7 @@ public class PlayingState implements GameStateManager
     private Input input;
     private Renderer renderer;
 
+    private Line line;
     private int points;
 
     public PlayingState( Engine engine )
@@ -25,22 +25,26 @@ public class PlayingState implements GameStateManager
         renderer = engine.getRenderer();
         input = engine.getInput();
         points = 5;
+
+        line = new Line( new Coordinate( 100, 100 ), new Coordinate( 200, 200 ), 0xff_f3c802 );
     }
 
     @Override
     public void update()
     {
-        if( input.isKeyDown( VK_UP ) )
+        if( input.isKey( VK_UP ) )
             points++;
-        if( input.isKeyDown( VK_DOWN ) )
+        if( input.isKey( VK_DOWN ) )
             points--;
+
+        line = new Line( new Coordinate( engine.getWindow().getWidth() / 2, engine.getWindow().getHeight() / 2 ), 50, points, 0xff_f3c802 );
+        line.setOffsets( engine.getWindow().getWidth() / 2 - line.getPixelData().getWidth() / 2, engine.getWindow().getHeight() / 2 - line.getPixelData().getHeight() / 2 );
     }
 
     @Override
     public void draw()
     {
-        Coordinate offset = new Coordinate( input.getMouseX(), input.getMouseY() );
-        Star.draw( points, 150, 90, offset, ColorPalette.getWhite(), renderer );
+        line.draw( renderer );
     }
 
 }
